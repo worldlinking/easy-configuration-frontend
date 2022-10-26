@@ -4,9 +4,9 @@
       <div class="container a-container is-txl" id="a-container">
         <form class="form" id="a-form" method="" action="">
           <h2 class="form_title title">Easy Configuration</h2>
-          <h2 class="form_title smallTitle">一个零代码模型定制网站</h2>
-          <input class="form__input" type="text" placeholder="账号" />
-          <input class="form__input" type="password" placeholder="密码" /><a
+          <h2 class="form_title smallTitle">零代码模型定制网站</h2>
+          <input class="form__input" type="text" placeholder="账号" autocomplete="off"/>
+          <input class="form__input" type="password" placeholder="密码" autocomplete="off"/><a
             class="form__link"
             >忘记密码?</a
           >
@@ -19,10 +19,10 @@
       <div class="container b-container is-txl" id="b-container">
         <form class="form" id="b-form" method="" action="">
           <h2 class="form_title title">账号注册</h2>
-          <input class="form__input" type="text" placeholder="账号" />
-          <input class="form__input" type="text" placeholder="邮箱" />
-          <input class="form__input" type="password" placeholder="密码" />
-          <input class="form__input" type="password" placeholder="重复密码" />
+          <input class="form__input" type="text" placeholder="账号" autocomplete="off"/>
+          <input class="form__input" type="text" placeholder="邮箱" autocomplete="off"/>
+          <input class="form__input" type="password" placeholder="密码" autocomplete="off"/>
+          <input class="form__input" type="password" placeholder="重复密码" autocomplete="off"/>
           <button class="form__button button submit">注册</button>
         </form>
       </div>
@@ -53,7 +53,7 @@
 
 <script>
 export default {
-  name: "EasyConfigurationAdmin",
+  name: "Index",
 
   data() {
     return {};
