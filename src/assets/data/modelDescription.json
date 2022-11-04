@@ -1,0 +1,27 @@
+{
+    "wlgz":{
+        "cv":{
+            "object":{
+                "name":"目标检测",
+                "description":"目标检测，也叫目标提取，是一种基于目标几何和统计特征的图像分割，它将目标的分割和识别合二为一，其准确性和实时性是整个系统的一项重要能力。尤其是在复杂场景中，需要对多个目标进行实时处理时，目标自动提取和识别就显得特别重要。",
+                "imgsPath":["/images/object1.png","/images/object2.png","/images/object3.png"],
+                "models":["yolo v5","Faster-RCNN","CenterNet"]
+            },
+            "semantic":{
+
+            },
+            "instance":{
+
+            }
+        },
+        "hw":{
+
+        },
+        "ld":{
+
+        }
+    },
+    "shgz":{
+
+    }
+}

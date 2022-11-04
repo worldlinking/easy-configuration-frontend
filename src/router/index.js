@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import User from "../views/User.vue";
 import Index from "../views/Index.vue";
 import Admin from "../views/Admin.vue";
+import Navigation from '../views/User/Navigation.vue'
 
 Vue.use(VueRouter);
 
@@ -16,11 +17,15 @@ const routes = [
     path: "/user",
     name: "User",
     component: User,
+    children:[
+      {path:'/',component:Navigation},
+    ]
   },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
+
   },
 ];
 
