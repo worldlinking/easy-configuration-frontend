@@ -36,6 +36,5 @@ export default {
 .rvContainer{
   height: 92vh;
   width: 100vw;
-  position: relative;
 }
 </style>
