@@ -31,7 +31,8 @@ export default {
 <style scoped>
 .aboveArea{
     height: 46vh;
-    background: rgb(233,241,255);
+    /* background: rgb(233,241,255); */
+    background: linear-gradient(to top, white,  rgb(233,241,255));;
     position: relative;
     display: flex;
     justify-content: center;
@@ -39,6 +40,7 @@ export default {
 .belowArea{
     height: 46vh;
     position: relative;
-    background-color: royalblue;
+    display: flex;
+    justify-content: center;
 }
 </style>

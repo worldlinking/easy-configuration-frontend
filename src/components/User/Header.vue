@@ -2,7 +2,8 @@
   <!-- 主页标题 -->
   <div class="header">
     <!-- 标题 -->
-    <div class="homeTitle">Easy Configuration</div>
+    <!-- <div class="homeTitle">Easy Configuration</div> -->
+    <!-- <div class="homeTitle">物联互联智能感知引擎</div> -->
     <!-- 登录按钮 -->
     <div class="logBtnC" v-if="!hasLogIn">
       <el-button

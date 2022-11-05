@@ -4,10 +4,9 @@
     <div class="homeContainer">
       <!-- 头部导航栏 -->
       <Header></Header>
-
       <!-- 中部内容区 -->
       <div class="rvContainer">
-        <router-view></router-view>
+        <router-view/>
       </div>
     </div>
   </div>
