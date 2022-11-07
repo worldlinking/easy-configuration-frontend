@@ -4,6 +4,22 @@ import User from "../views/User.vue";
 import Index from "../views/Index.vue";
 import Admin from "../views/Admin.vue";
 import Navigation from "../views/User/Navigation.vue";
+import IoTPerception from "../views/User/IoTPerception.vue";
+import SocialPerception from "../views/User/SocialPerception.vue";
+import Model from "../views/User/Model.vue";
+
+const originalReplace = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function (location, onResolve, onReject) {
+  if (onResolve || onReject) {
+    return originalReplace.call(this, location, onResolve, onReject);
+  }
+  return originalReplace.call(this, location).catch((err) => {
+    if (VueRouter.isNavigationFailure(err)) {
+      return err;
+    }
+    return Promise.reject(err);
+  });
+};
 
 Vue.use(VueRouter);
 
@@ -17,7 +33,24 @@ const routes = [
     path: "/user",
     name: "User",
     component: User,
-    children: [{ path: "navigation", component: Navigation,name:"Navigation"}],
+    children: [
+      { path: "navigation", component: Navigation, name: "Navigation" },
+      {
+        path: "IoTPerception",
+        component: IoTPerception,
+        name: "IoTPerception",
+      },
+      {
+        path: "SocialPerception",
+        component: SocialPerception,
+        name: "SocialPerception",
+      },
+      {
+        path: "Model",
+        component: Model,
+        name: "Model",
+      },
+    ],
   },
   {
     path: "/admin",

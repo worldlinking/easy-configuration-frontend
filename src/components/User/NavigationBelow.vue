@@ -1,7 +1,7 @@
 <template>
   <div class="NavigationBelow">
     <!-- 物联感知导航 -->
-    <div class="gzNav wl">
+    <div class="gzNav wl" @click="toIoT">
       <div class="gzHeader">
         <i class="el-icon-headset" style="color: blue"></i>
         物联感知>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <!-- 互联感知导航 -->
-    <div class="gzNav hl">
+    <div class="gzNav hl" @click="toSocial">
       <div class="gzHeader">
         <i class="el-icon-mobile-phone" style="color: blue"></i>
         互联感知>
@@ -47,7 +47,18 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    toIoT() {
+      this.$router.replace({
+        name: "IoTPerception",
+      });
+    },
+    toSocial() {
+      this.$router.replace({
+        name: "SocialPerception",
+      });
+    },
+  },
 };
 </script>
 
@@ -98,6 +109,8 @@ export default {
   background-color: rgb(245, 245, 245);
   text-align: center;
   font-weight: 500;
+  height: 3vh;
+  line-height: 3vh;
 }
 .gzDesc {
   padding: 2vw;

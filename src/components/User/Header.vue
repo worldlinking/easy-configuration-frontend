@@ -44,16 +44,16 @@
 
     <!-- 功能区 -->
     <div class="funcC">
-      <el-dropdown
+      <div
         size="default"
         type="primary"
         v-for="(func, index) in funcs"
         :key="index"
       >
-        <span class="el-dropdown-link funcStyle">
+        <span class="el-dropdown-link funcStyle" @click="doFunc(index)">
           {{ func }}
         </span>
-      </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +92,18 @@ export default {
         this.hasLogIn = true;
       }
     },
+    doFunc(index){
+        switch(index){
+          case 0:
+            this.home();
+            break;
+        }
+    },
+    home(){
+      this.$router.replace({
+        name:"Navigation"
+      });
+    }
   },
 };
 </script>
