@@ -137,7 +137,8 @@ export default {
       this.$router.replace({
         name:"Model",
         params:{
-          modelIndex:index
+          modelIndex:index,
+          type:0
         }
       });
     }

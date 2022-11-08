@@ -17,7 +17,7 @@
     <div class="AvatarC" v-if="hasLogIn">
       <el-dropdown placement="bottom">
         <el-avatar
-          src="https://ts1.cn.mm.bing.net/th/id/R-C.7213dc15eaa7b3f5756aaae1dd52ca6e?rik=MS%2fkukHXKcuvhw&riu=http%3a%2f%2fimg.duoziwang.com%2f2018%2f18%2f06011824507078.jpg&ehk=GjQYXg8XXKghxRQXnFasqLZJO2fdbS8WtAiVyoYvSx0%3d&risl=&pid=ImgRaw&r=0"
+          src="https://img.zcool.cn/community/01a6095f110b9fa8012066219b67d4.png@1280w_1l_2o_100sh.png"
           class="el-dropdown-link touX"
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
