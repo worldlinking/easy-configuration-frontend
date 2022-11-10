@@ -16,6 +16,8 @@ import axios from "axios";
 import ModelMenu from "../../components/User/ModelMenu.vue";
 import config from "../../assets/configs/config";
 let { ip,nginxIp } = config;
+import {mapMutations} from 'vuex'
+
 export default {
   name: "EasyConfigurationModel",
   components: {
@@ -25,31 +27,23 @@ export default {
     return {
       IoTModelName: ["目标检测", "语义分割", "实例分割"],
       socialModelName:[],
-      standModel: [],
     };
   },
   async created() {
     this.paramsAnalysis();
-      await this.getStandModel();
+    this.initModelParams({modelIndex:this.modelIndex,type:this.type});
   },
   mounted() {},
 
   methods: {
     /* 对路由切换参数进行解析，判断要创建的模型类型 */
+    ...mapMutations(['initModelParams']),
     paramsAnalysis() {
       // this.modelIndex = this.$route.params.modelIndex;
       // this.type = this.$route.params.modelIndex;//0：物联感知，1：社会感知
       this.modelIndex = 1;
       this.type = 0;
     },
-    async getStandModel(){//根据模型种类获取所有的标准模型
-      if(this.type==0){//物联感知模型
-        let res = await axios.get(`${ip}/getAllStandModelByType?type=${this.modelIndex}`);
-        this.standModel = res.data.data;
-      }else{
-
-      }
-    }
   },
 };
 </script>

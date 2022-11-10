@@ -2,16 +2,14 @@
   <div class="useMyModel">
     <el-form ref="form" :model="form" label-width="500">
       <el-form-item label="标准模型">
-        <el-select v-model="form.standModel" placeholder="请选择标准模型">
-          <el-option label="deeplabv3" value="deeplabv3"></el-option>
+        <el-select v-model="form.standModel" placeholder="请选择标准模型" @change="smChange">
+          <el-option v-for="sm,index in currentStandModel" :key="index" :label="sm.name" :value="sm.id"></el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item label="训练权重">
-        <el-select v-model="form.standModel" placeholder="请选择训练权重">
-          <el-option
-            label="best_deeplabv3plus_mobilenet_cityscapes_os16.pth"
-            value="best_deeplabv3plus_mobilenet_cityscapes_os16.pth"
-          ></el-option>
+        <el-select v-model="form.standModelWeight" placeholder="请选择训练权重">
+          <el-option v-for="sm,index in currentWeight" :key="index" :label="sm.fields.weight_path" :value="sm.pk"></el-option>
         </el-select>
       </el-form-item>
 
@@ -42,7 +40,7 @@
         </el-col>
       </el-row>
       <el-form-item label="预测与下载">
-        <el-button type="primary" @click="predict">预测</el-button>
+        <el-button type="primary" @click="predictS">预测</el-button>
         <el-button type="downPredict">下载</el-button>
       </el-form-item>
     </el-form>
@@ -52,6 +50,7 @@
 <script>
 import axios from "axios";
 import config from "../../assets/configs/config";
+import {mapState,mapMutations} from 'vuex'
 let { ip,nginxIp } = config;
 export default {
   name: "WorkspaceJsonUseMyModel",
@@ -64,15 +63,19 @@ export default {
       },
       imageUrl: "",
       uploadImgBase64: "",
-      predictImgSrc:
-        "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
       currentFile: null,
     };
   },
-
+  computed:{
+    ...mapState(["currentStandModel","currentWeight","predictImgSrc"]),
+  },
+  async created(){
+    await this.getStandModel();
+  },
   mounted() {},
 
   methods: {
+    ...mapMutations(["getStandModel","initModelParams","updateCurrentWeight","predict"]),
     beforeUpload(file) {
       this.toBase64(file);
       this.currentFile = file;
@@ -88,36 +91,14 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    async predict() {
-      //上传文件进行预测
-      if (!this.currentFile) {
-        this.$message({
-          type: "error",
-          message: "请先上传待预测文件!",
-        });
-        return;
-      }
-
-      let postUrl = `${ip}/useStandModelWeightImage`;
-      const formData = new FormData();
-      formData.append("weight_id", 3);
-      formData.append("standModel_id", 14);
-      formData.append("predict_file", this.currentFile);
-      formData.append("user_id", 2);
-      let res = await axios.post(postUrl, formData);
-
-      if (res.data.code == 200) {
-        this.$message({
-          type: "success",
-          message: "预测成功!",
-        });
-
-        this.predictImgSrc = nginxIp + '\\' + res.data.data;
-        console.log(this.predictImgSrc);
-      }
+    async predictS() {
+      this.predict({current_file:this.currentFile,weight_id:this.form.standModelWeight,standModel_id:this.form.standModel,cp:this});
     },
     downPredict(){
 
+    },
+    smChange(newSm){
+      this.updateCurrentWeight(newSm);
     }
   },
   watch: {
