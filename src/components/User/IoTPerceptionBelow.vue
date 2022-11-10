@@ -134,7 +134,7 @@ export default {
       this.currentIndex = index;
     },
     modelShow(index){
-      this.$router.replace({
+      this.$router.push({
         name:"Model",
         params:{
           modelIndex:index,

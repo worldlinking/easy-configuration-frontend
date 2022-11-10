@@ -1,62 +1,82 @@
 <template>
-    <div class="model">
-        <div class="modelMenuContainer">
-            <div class="modelNameContainer">
-                {{modelName[modelIndex]}}模型
-            </div>
-            <ModelMenu></ModelMenu>
-        </div>
+  <div class="model">
+    <div class="modelMenuContainer">
+      <div class="modelNameContainer" v-if="type==0">{{ IoTModelName[modelIndex] }}模型</div>
+      <div class="modelNameContainer" v-else>{{ socialModelName[modelIndex] }}模型</div>
+      <ModelMenu></ModelMenu>
     </div>
+    <div class="modelRouterContainer">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
-import ModelMenu from '../../components/User/ModelMenu.vue'
+import axios from "axios";
+import ModelMenu from "../../components/User/ModelMenu.vue";
+import config from "../../assets/configs/config";
+let { ip,nginxIp } = config;
 export default {
-    name: 'EasyConfigurationModel',
-    components:{
-        ModelMenu:ModelMenu
-    },
-    data() {
-        return {
-            modelName:["目标检测","语义分割","实例分割"],
-        };
-    },
-    created(){
-        this.paramsAnalysis();
-    },
-    mounted() {
-        
-    },
+  name: "EasyConfigurationModel",
+  components: {
+    ModelMenu: ModelMenu,
+  },
+  data() {
+    return {
+      IoTModelName: ["目标检测", "语义分割", "实例分割"],
+      socialModelName:[],
+      standModel: [],
+    };
+  },
+  async created() {
+    this.paramsAnalysis();
+      await this.getStandModel();
+  },
+  mounted() {},
 
-    methods: {
-        /* 对路由切换参数进行解析，判断要创建的模型类型 */
-        paramsAnalysis(){
-            // this.modelIndex = this.$route.params.modelIndex;
-            // this.type = this.$route.params.modelIndex;//0：物联感知，1：社会感知
-            this.modelIndex = 1;
-            this.type = 0;
-        }
+  methods: {
+    /* 对路由切换参数进行解析，判断要创建的模型类型 */
+    paramsAnalysis() {
+      // this.modelIndex = this.$route.params.modelIndex;
+      // this.type = this.$route.params.modelIndex;//0：物联感知，1：社会感知
+      this.modelIndex = 1;
+      this.type = 0;
     },
+    async getStandModel(){//根据模型种类获取所有的标准模型
+      if(this.type==0){//物联感知模型
+        let res = await axios.get(`${ip}/getAllStandModelByType?type=${this.modelIndex}`);
+        this.standModel = res.data.data;
+      }else{
+
+      }
+    }
+  },
 };
 </script>
 
 <style scoped>
-.model{
-    width: 100vw;
-    height: 92vh;
+.model {
+  width: 100vw;
+  height: 92vh;
+  display: flex;
 }
-.modelMenuContainer{
-    width: 15vw;
-    height: 92vh;
-    background-color: rgb(245,245,245);
-    box-shadow: 0 0 2px gray;
+.modelMenuContainer {
+  width: 15vw;
+  height: 92vh;
+  background-color: rgb(245, 245, 245);
+  box-shadow: 0 0 2px gray;
 }
-.modelNameContainer{
-    height: 5vh;
-    font-size: 1vw;
-    font-weight: bolder;
-    display: flex;
-    align-items: center;
-    padding-left: 1vw;
+.modelNameContainer {
+  height: 5vh;
+  font-size: 1vw;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  padding-left: 1vw;
+}
+.modelRouterContainer {
+  height: 92vh;
+  width: 85vw;
+  /* background-color: #bfa; */
 }
 </style>

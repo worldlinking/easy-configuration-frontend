@@ -49,12 +49,12 @@ export default {
 
   methods: {
     toIoT() {
-      this.$router.replace({
+      this.$router.push({
         name: "IoTPerception",
       });
     },
     toSocial() {
-      this.$router.replace({
+      this.$router.push({
         name: "SocialPerception",
       });
     },

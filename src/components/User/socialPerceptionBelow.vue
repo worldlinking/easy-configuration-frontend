@@ -53,7 +53,7 @@ export default {
 
   methods: {
     modelShow(index) {
-      this.$router.replace({
+      this.$router.push({
         name: "Model",
         params: {
           modelIndex: index,

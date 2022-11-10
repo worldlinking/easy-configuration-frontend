@@ -7,6 +7,7 @@ import Navigation from "../views/User/Navigation.vue";
 import IoTPerception from "../views/User/IoTPerception.vue";
 import SocialPerception from "../views/User/SocialPerception.vue";
 import Model from "../views/User/Model.vue";
+import UsePublicModel from '../views/User/UsePublicModel.vue' 
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -49,6 +50,13 @@ const routes = [
         path: "Model",
         component: Model,
         name: "Model",
+        children:[
+          {
+            path: "UsePublicModel",
+            component: UsePublicModel,
+            name: "UsePublicModel",
+          }
+        ]
       },
     ],
   },
