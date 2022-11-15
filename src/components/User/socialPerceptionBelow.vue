@@ -57,7 +57,7 @@ export default {
         name: "Model",
         params: {
           modelIndex: index,
-          type: 0,
+          type: 1,
         },
       });
     },

@@ -26,7 +26,8 @@ export default {
   data() {
     return {
       IoTModelName: ["目标检测", "语义分割", "实例分割"],
-      socialModelName:[],
+      socialModelName:['单标签文本分类','多标签文本分类','情感分析'],
+      standModel: [],
     };
   },
   async created() {

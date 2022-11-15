@@ -7,7 +7,10 @@ import Navigation from "../views/User/Navigation.vue";
 import IoTPerception from "../views/User/IoTPerception.vue";
 import SocialPerception from "../views/User/SocialPerception.vue";
 import Model from "../views/User/Model.vue";
-import UsePublicModel from '../views/User/UsePublicModel.vue' 
+import UsePublicModel from '../views/User/UsePublicModel.vue'
+import SpiderJobList from "../views/User/SpiderJobList";
+import SpiderRequest from "../views/User/SpiderRequest";
+import SpiderItemList from "../views/User/SpiderItemList";
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -55,7 +58,22 @@ const routes = [
             path: "UsePublicModel",
             component: UsePublicModel,
             name: "UsePublicModel",
-          }
+          },
+          {
+            path: "SpiderJobList",
+            component: SpiderJobList,
+            name: "SpiderJobList",
+          },
+          {
+            path: "SpiderRequest",
+            component: SpiderRequest,
+            name: "SpiderRequest",
+          },
+          {
+            path: "SpiderItemList/:id",
+            component: SpiderItemList,
+            name: "SpiderItemList",
+          },
         ]
       },
     ],
