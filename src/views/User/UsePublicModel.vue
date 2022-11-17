@@ -29,10 +29,19 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="选择上传待预测样本方式" v-show="this.type===1">
+        <el-select v-model="form.uploadType" placeholder="选择上传待预测样本方式">
+          <el-option label="输入单条文本方式" value='0'></el-option>
+          <el-option label="本地上传" value='1'></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-row>
         <el-col :span="12">
           <el-form-item label="上传待预测样本">
+            <el-input v-show="form.uploadType==='0'" @change="txtChanged" style="width: 50%" v-model="form.txtContent"></el-input>
             <el-upload
+              v-show="this.type===0"
               class="avatar-uploader"
               :show-file-list="false"
               action=""
@@ -51,6 +60,19 @@
                 class="el-icon-plus avatar-uploader-icon"
               ></i>
             </el-upload>
+            <el-upload
+                v-show="form.uploadType==='1'"
+                class="avatar-uploader"
+                :show-file-list="false"
+                action=""
+                :before-upload="beforeSocialUpload"
+            >
+              <div v-if="predictType == 'zip' || predictType == 'text' ">{{ currentFile.name }}</div>
+              <i
+                  v-if="!predictType"
+                  class="el-icon-plus avatar-uploader-icon"
+              ></i>
+            </el-upload>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -62,7 +84,8 @@
               v-if="predictType == 'image' && predictImgLink != ''"
               @error="imgOnError"
             />
-            <div v-show="predictType == 'zip'">{{ predictZipSrc }}</div>
+            <div v-show="predictType == 'zip' && this.type===0">{{ predictZipSrc }}</div>
+            <div v-show="this.type===1 ">{{ txtResult }}</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -84,9 +107,12 @@ export default {
 
   data() {
     return {
+      isTXT:true,
       form: {
         standModel: "",
         standModelWeight: "",
+        txtContent:'',
+        uploadType:'',
       },
       imageUrl: "",
       uploadImgBase64: "",
@@ -102,6 +128,8 @@ export default {
       "predictImgSrc",
       "predictZipSrc",
       "predictStatus",
+        "type",
+        'txtResult',
     ]),
     predictImgLink() {
       if (this.predictStatus != 2) return this.predictImgSrc;
@@ -114,6 +142,7 @@ export default {
   },
   async created() {
     await this.getStandModel();
+    console.log(this.currentStandModel)
   },
   mounted() {},
 
@@ -143,6 +172,24 @@ export default {
       }
       return false;
     },
+    beforeSocialUpload(file){
+      console.log(file.type)
+      if (file.type == "text/plain" || file.type == "text/csv") {
+        this.predictType = "text";
+        this.currentFile = file;
+        this.reUpload();
+      } else if (file.type == "application/x-zip-compressed") {
+        this.predictType = "zip";
+        this.currentFile = file;
+        this.reUpload();
+      } else {
+        this.$message({
+          type: "error",
+          message: "只接受.txt,.csv或者zip文件",
+        });
+      }
+      return false;
+    },
     toBase64(file) {
       const self = this;
       let reader = new FileReader();
@@ -152,6 +199,9 @@ export default {
       if (file) {
         reader.readAsDataURL(file);
       }
+    },
+    txtChanged(content){
+      this.reUpload();
     },
     async predictS() {
       if (this.predictStatus == 1) {
@@ -167,12 +217,16 @@ export default {
         });
         return;
       }
+      if(this.form.uploadType==='0'){
+        this.predictType = "txt";
+      }
       this.predict({
         current_file: this.currentFile,
         weight_id: this.form.standModelWeight,
         standModel_id: this.form.standModel,
         cp: this,
         predictType: this.predictType,
+        txtContent:this.form.txtContent
       });
     },
     downPredict() {
@@ -199,9 +253,22 @@ export default {
         a.download = "predict.zip";
         a.href = this.predictZipSrc.replace("\\", "/");
         a.dispatchEvent(event);
+      }else if (this.predictType == "text") {
+        fetch(this.txtResult.replace("\\", "/")+'.txt').then((res) => {
+          res.blob().then((blob) => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const filename = 'predict.txt';
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;;
+            a.click();
+            window.URL.revokeObjectURL(blobUrl);
+          });
+        });
       }
     },
     smChange(newSm) {
+      console.log(newSm)
       this.updateCurrentWeight(newSm);
     },
     imgOnError() {

@@ -1,10 +1,18 @@
 <template>
   <div class="SpiderItemList">
+    <el-row class="itemTab">
+      <el-col :span="6">
+        <span >爬取条目：{{this.itemList.length}}条</span>
+      </el-col>
+      <el-col :span="6" :offset="12">
+        <el-button style="float: right;" type="primary" icon="el-icon-upload"  @click="exportEvent">导出文本内容</el-button>
+      </el-col>
+    </el-row>
     <el-table
         v-loading="loadingShow"
         element-loading-text="数据正在加载中..."
         :data="itemList"
-        height='800'
+        height='720'
         border
         style="width: 100%">
       <el-table-column
@@ -12,7 +20,7 @@
           :key="index"
           :prop="item.prop"
           :label="item.label"
-          min-width='100'>
+          :width="columnWidth(item.prop)">
       </el-table-column>
       <el-table-column
           label="操作"
@@ -45,6 +53,27 @@ export default {
       let siteName=row.siteName
       console.log(id,siteName);
       this.$router.push({name: "SpiderItemList",params:{id:id}})
+    },
+    columnWidth(item){
+      let widthStr=''
+      if(item==='text'){
+        widthStr='400'
+      }else {
+        widthStr='100'
+      }
+      return widthStr
+    },
+    exportEvent(){
+      let str=''
+      this.itemList.forEach(item=>{
+        str+=item.text+'\r\n'
+      })
+      let export_blob = new Blob([str]);
+      let event = new MouseEvent("click");
+      let save_link = document.createElement("a");
+      save_link.href = window.URL.createObjectURL(export_blob);
+      save_link.download = '导出'+'.txt';
+      save_link.dispatchEvent(event);
     }
   },
 
@@ -62,6 +91,9 @@ export default {
 .SpiderItemList{
   padding-top: 3vh;
   padding-left: 1vw;
-  padding-right: 1vw;
+  padding-right: 1.5vw;
+}
+.itemTab{
+  margin-bottom: 1vh;
 }
 </style>
