@@ -27,7 +27,7 @@
           <i class="el-icon-upload"></i>
           <span>数据中心</span>
         </template>
-        <el-menu-item index="3-1">我的数据集</el-menu-item>
+        <el-menu-item index="/user/Model/MyDataset">我的数据集</el-menu-item>
         <el-menu-item index="3-2">公开数据集</el-menu-item>
         <el-menu-item index="3-3">在线标注</el-menu-item>
         <el-menu-item index="/user/Model/SpiderJobList">在线爬取</el-menu-item>
@@ -70,7 +70,7 @@ export default {
   display: none;
 }
 
-.el-submenu >>>.el-menu-item{
+.el-submenu >>> .el-menu-item{
   height: 36.5px;
   line-height: 36.5px;
   font-weight: 500;
