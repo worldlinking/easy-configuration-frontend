@@ -16,7 +16,7 @@ import axios from "axios";
 import ModelMenu from "../../components/User/ModelMenu.vue";
 import config from "../../assets/configs/config";
 let { ip,nginxIp } = config;
-import {mapMutations,mapState} from 'vuex'
+import {mapMutations} from 'vuex'
 
 export default {
   name: "EasyConfigurationModel",
@@ -30,23 +30,25 @@ export default {
       standModel: [],
     };
   },
-  computed:{
-    ...mapState(['currentModel'])
-  },
   async created() {
     this.paramsAnalysis();
-    this.initModelParams({modelIndex:this.modelIndex,type:this.type});
-    },
+    this.initModelParams({modelIndex:this.modelIndex,type:this.type,modelName:this.modelName});
+  },
   mounted() {},
 
   methods: {
     /* 对路由切换参数进行解析，判断要创建的模型类型 */
     ...mapMutations(['initModelParams']),
     paramsAnalysis() {
-      this.modelIndex = this.$route.params.modelIndex;
-      this.type = this.$route.params.type;//0：物联感知，1：社会感知
-      // this.modelIndex = 0;
-      // this.type = 0;
+      // this.modelIndex = this.$route.params.modelIndex;
+      // this.type = this.$route.params.type;//0：物联感知，1：社会感知
+      this.modelIndex = 0;
+      this.type = 0;
+      if(this.type == 0){
+        this.modelName = this.IoTModelName[this.modelIndex];
+      }else{
+        this.modelName = this.socialModelName[this.modelIndex];
+      }
     },
   },
 };
@@ -75,6 +77,6 @@ export default {
 .modelRouterContainer {
   height: 92vh;
   width: 85vw;
-  /* background-color: #bfa; */
+  position: relative;
 }
 </style>

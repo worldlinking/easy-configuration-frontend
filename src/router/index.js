@@ -16,6 +16,7 @@ import CreateModel from "../views/User/CreateModel";
 import TrainModel from "../views/User/TrainModel";
 import VerifyModel from "../views/User/VerifyModel";
 
+import MyDataset from '../views/User/MyDataset.vue'
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -63,6 +64,11 @@ const routes = [
             path: "UsePublicModel",
             component: UsePublicModel,
             name: "UsePublicModel",
+          },
+          {
+            path:"MyDataset",
+            component:MyDataset,
+            name:"MyDataset"
           },
           {
             path: "SpiderJobList",
