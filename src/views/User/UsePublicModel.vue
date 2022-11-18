@@ -107,7 +107,6 @@ export default {
 
   data() {
     return {
-      isTXT:true,
       form: {
         standModel: "",
         standModelWeight: "",

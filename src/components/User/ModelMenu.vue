@@ -15,10 +15,10 @@
           <i class="el-icon-menu"></i>
           <span>模型中心</span>
         </template>
-        <el-menu-item index="2-1">我的模型</el-menu-item>
-        <el-menu-item index="2-2">创建模型</el-menu-item>
-        <el-menu-item index="2-3">训练模型</el-menu-item>
-        <el-menu-item index="2-4">校验模型</el-menu-item>
+        <el-menu-item index="/user/Model/MyModel">我的模型</el-menu-item>
+        <el-menu-item index="/user/Model/CreateModel">创建模型</el-menu-item>
+        <el-menu-item index="/user/Model/TrainModel">训练模型</el-menu-item>
+        <el-menu-item index="/user/Model/VerifyModel">校验模型</el-menu-item>
         <el-menu-item index="2-5">发布模型</el-menu-item>
       </el-submenu>
 

@@ -12,6 +12,7 @@ const options = {
     user_id: 2,
     modelIndex: -1,
     type: -1,
+    currentModel:'',
     currentStandModel: [],
     currentWeight: [],
     predictImgSrc:

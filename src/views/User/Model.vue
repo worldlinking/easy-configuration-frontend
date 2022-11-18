@@ -16,7 +16,7 @@ import axios from "axios";
 import ModelMenu from "../../components/User/ModelMenu.vue";
 import config from "../../assets/configs/config";
 let { ip,nginxIp } = config;
-import {mapMutations} from 'vuex'
+import {mapMutations,mapState} from 'vuex'
 
 export default {
   name: "EasyConfigurationModel",
@@ -30,10 +30,13 @@ export default {
       standModel: [],
     };
   },
+  computed:{
+    ...mapState(['currentModel'])
+  },
   async created() {
     this.paramsAnalysis();
     this.initModelParams({modelIndex:this.modelIndex,type:this.type});
-  },
+    },
   mounted() {},
 
   methods: {

@@ -11,6 +11,11 @@ import UsePublicModel from '../views/User/UsePublicModel.vue'
 import SpiderJobList from "../views/User/SpiderJobList";
 import SpiderRequest from "../views/User/SpiderRequest";
 import SpiderItemList from "../views/User/SpiderItemList";
+import MyModel from "../views/User/MyModel";
+import CreateModel from "../views/User/CreateModel";
+import TrainModel from "../views/User/TrainModel";
+import VerifyModel from "../views/User/VerifyModel";
+
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -73,6 +78,22 @@ const routes = [
             path: "SpiderItemList/:id",
             component: SpiderItemList,
             name: "SpiderItemList",
+          },{
+            path: "MyModel",
+            component: MyModel,
+            name: "MyModel",
+          },{
+            path: "CreateModel",
+            component: CreateModel,
+            name: "CreateModel",
+          },{
+            path: "TrainModel",
+            component: TrainModel,
+            name: "TrainModel",
+          },{
+            path: "VerifyModel",
+            component: VerifyModel,
+            name: "VerifyModel",
           },
         ]
       },

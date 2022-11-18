@@ -36,6 +36,8 @@ import axios from "axios";
 import config from "../../assets/configs/config";
 
 let { ip } = config;
+import { mapState } from "vuex";
+
 export default {
   name: "SpiderRequest",
   data() {
@@ -48,6 +50,9 @@ export default {
       }
     }
   },
+  computed:{
+    ...mapState(["user_id"])
+  },
   methods: {
     async onSubmit() {
       let postUrl = `${ip}/spider/spiderRequest/`;
@@ -57,7 +62,7 @@ export default {
       formData.append("keyword", this.form.keyword);
       formData.append("startdate", this.form.Date[0]);
       formData.append("enddate", this.form.Date[1]);
-      // formData.append("user_id", 2);
+      formData.append("user_id", this.user_id);
       let res = await axios.post(postUrl, formData);
 
       if (res.data.code === 200) {
