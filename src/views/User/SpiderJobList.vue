@@ -2,9 +2,7 @@
   <div class="spiderJobList">
     <el-button type="primary" @click="$router.push('/user/Model/SpiderRequest')" style="margin-bottom: 1rem">创建爬虫任务</el-button>
     <el-table
-        v-loading="loadingShow"
-        element-loading-text="数据正在加载中..."
-        :data="jobList"
+        :data="spiderJobs"
         border
         style="width: 100%">
       <el-table-column
@@ -62,19 +60,20 @@
 <script>
 import axios from "axios";
 import config from "../../assets/configs/config";
-
+import {mapState,mapMutations} from "vuex"
 let { ip } = config;
 export default {
   name: "SpiderJobList",
   async mounted() {
-    let res = await axios.get(`${ip}/spider/taskJobList/`);
-    this.jobList=res.data.data
-    this.loadingShow=false
+    // let res = await axios.get(`${ip}/spider/taskJobList/`);
+    // this.jobList=res.data.data
+    // this.loadingShow=false
+    this.getAllSpiderJobs(this)
   },
   methods: {
+    ...mapMutations(["getAllSpiderJobs"]),
     checkJob(row) {
       let id=row.id
-      let siteName=row.siteName
       this.$router.push({name: "SpiderItemList",params:{id:id}})
     },
     async cancelJob(row){
@@ -101,9 +100,10 @@ export default {
 
   data() {
     return {
-      jobList: [],
-      loadingShow:true,
     }
+  },
+  computed:{
+    ...mapState(["spiderJobs"])
   }
 }
 </script>

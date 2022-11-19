@@ -23,6 +23,8 @@ const options = {
     predictStatus: 0,
     datasets: [],
     standDataset: [],
+    models:[],
+    spiderJobs:[],
   },
   actions: {},
   mutations: {
@@ -36,6 +38,29 @@ const options = {
           state.modelType = i;
         }
       }
+    },
+    async getAllSpiderJobs(state,cp){
+      //查询关联的模型
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(
+          `${ip}/spider/taskJobList/?user_id=${state.user_id}`
+      );
+
+      if (res.data.code != 200) {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+        return;
+      }
+
+      loading.close();
+      state.spiderJobs = res.data.data;
     },
     async getStandModel(state) {
       //根据模型种类获取所有的标准模型
@@ -264,6 +289,49 @@ const options = {
           type: "error",
           message: "数据导入失败",
         });
+      }
+    },
+    async getAllModel(state, cp) {
+      //查询关联的模型
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(
+          `${ip}/selectAllModel?user_id=${state.user_id}`
+      );
+
+      if (res.data.code != 200) {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+        return;
+      }
+
+      loading.close();
+      state.models = res.data.data;
+      state.models.forEach((value) => {
+        value.model_type_name = modelsName[value.standModel__type];
+      });
+    },
+    async createAModel(state, { form: form, cp: cp }) {
+      form.user_id = state.user_id;
+      console.log(form);
+
+      let res = await axios.post(`${ip}/createModel`, form);
+      if (res.data.code == 200) {
+        cp.$message({
+          message: "创建模型成功！",
+          type: "success",
+        });
+        cp.form = {
+          name:'',
+          standModel_id:'',
+          limit:null
+        };
       }
     },
   },

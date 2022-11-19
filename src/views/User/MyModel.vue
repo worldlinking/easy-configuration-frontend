@@ -12,9 +12,8 @@
     </el-row>
 
     <el-table
-        v-loading="loadingShow"
-        element-loading-text="数据正在加载中..."
-        :data="modelList.filter(data => !ModelName || data.name.toLowerCase().includes(ModelName.toLowerCase()))"
+
+        :data="modelsInType.filter(data => !ModelName || data.name.toLowerCase().includes(ModelName.toLowerCase()))"
         border
         style="width: 100%">
       <template slot="empty">
@@ -25,29 +24,35 @@
         </div>
       </template>
       <el-table-column
-          prop="id"
-          label="id"
-          min-width="200">
-      </el-table-column>
-      <el-table-column
           prop="name"
           label="模型名称"
           min-width="200">
       </el-table-column>
       <el-table-column
-          prop="standModel"
-          label="模型种类"
+          prop="model_type_name"
+          label="模型类型"
           min-width="200">
       </el-table-column>
       <el-table-column
           prop="status"
           label="模型状态"
           min-width="200">
+        <template slot-scope="scope">
+          {{modelStatus[scope.row.status]}}
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="standModel__name"
+          label="标准模型"
+          min-width="200">
       </el-table-column>
       <el-table-column
           prop="limit"
-          label="模型权限"
+          label="权限"
           min-width="200">
+        <template slot-scope="scope">
+          {{scope.row.limit == '0' ? '公有':'私有'}}
+        </template>
       </el-table-column>
       <el-table-column
           label="操作"
@@ -65,26 +70,35 @@
 <script>
 import axios from "axios";
 import config from "../../assets/configs/config";
-
+import {mapState,mapMutations} from "vuex"
 let { ip } = config;
 export default {
   name: "MyModel",
   async mounted() {
-    // let res = await axios.get(`${ip}/selectAllModel`);
-    // this.modelList=res.data.data
-    this.loadingShow=false
+    this.getAllModel(this)
   },
   methods: {
+    ...mapMutations(["getAllModel"]),
     searchModel(){
       console.log('111')
     }
   },
   data(){
     return{
-      modelList:[],
-      loadingShow:true,
-      ModelName:''
+      ModelName:'',
+      modelStatus:['未开始训练','训练中','训练完成','训练手动终止','训练出错'],
     }
+  },
+  computed: {
+    ...mapState([
+        "models",
+        "modelType"
+    ]),
+    modelsInType() {
+      return this.models.filter((value) => {
+        return value.standModel__type == this.modelType;
+      });
+    },
   }
 }
 </script>
