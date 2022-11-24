@@ -14,7 +14,12 @@
     </div>
     <!-- 表格容器 -->
     <div class="datasetTableCon">
-      <el-table :data="datasetsInType" stripe style="width: 100%" @row-click="tableClick"> 
+      <el-table
+        :data="datasetsInType"
+        style="width: 100%"
+        @row-click="tableClick"
+        :border="true"
+      >
         <el-table-column prop="name" label="名称"> </el-table-column>
         <el-table-column prop="model_type_name" label="模型类型">
         </el-table-column>
@@ -59,13 +64,13 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="zip">zip导入</el-dropdown-item>
-                  <el-dropdown-item command="url">url导入</el-dropdown-item>
+                  <el-dropdown-item command="url">从接口导入</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
 
               <div>查看</div>
 
-              <div>删除</div>
+              <div @click="deleteDataset">删除</div>
             </div>
           </template>
         </el-table-column>
@@ -148,7 +153,6 @@
       :before-upload="beforeUpload"
     >
     </el-upload>
-
   </div>
 </template>
 
@@ -202,7 +206,7 @@ export default {
           },
         ],
       },
-      currentDataset:{}
+      currentDataset: {},
     };
   },
 
@@ -213,7 +217,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["getAllDataset", "getStandDataset", "createADataset","importAtData"]),
+    ...mapMutations([
+      "getAllDataset",
+      "getStandDataset",
+      "createADataset",
+      "importAtData",
+      "deleteADataset",
+    ]),
     makeFormShow() {
       this.dialogFormVisible = true;
     },
@@ -245,15 +255,37 @@ export default {
           break;
       }
     },
-    beforeUpload(file){
-        if (file.type == "application/x-zip-compressed") {//zip文件
-            this.importAtData({dataset_id:this.currentDataset.id,dataset:file,cp:this});
-        }
-        return false;
+    beforeUpload(file) {
+      if (file.type == "application/x-zip-compressed") {
+        //zip文件
+        this.importAtData({
+          dataset_id: this.currentDataset.id,
+          dataset: file,
+          cp: this,
+        });
+      }
+      return false;
     },
-    tableClick(row){
-        this.currentDataset = row;
-    }
+    tableClick(row) {
+      this.currentDataset = row;
+    },
+    deleteDataset() {
+      //删除数据集
+      this.$confirm("此操作将永久删除数据集文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.deleteADataset({dataset_id:this.currentDataset.id, cp:this});
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
   computed: {
     ...mapState([
@@ -262,10 +294,11 @@ export default {
       "modelIndex",
       "modelName",
       "standDataset",
+      "modelType"
     ]),
     datasetsInType() {
       return this.datasets.filter((value) => {
-        return value.type == this.type;
+        return value.model_type == this.modelType;
       });
     },
   },

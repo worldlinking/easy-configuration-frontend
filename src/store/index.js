@@ -23,8 +23,9 @@ const options = {
     predictStatus: 0,
     datasets: [],
     standDataset: [],
-    models:[],
-    spiderJobs:[],
+    models: [],
+    spiderJobs: [],
+    connectDataset: [], //所有能关联的数据集：自己的+公有的
   },
   actions: {},
   mutations: {
@@ -39,7 +40,7 @@ const options = {
         }
       }
     },
-    async getAllSpiderJobs(state,cp){
+    async getAllSpiderJobs(state, cp) {
       //查询关联的模型
       const loading = cp.$loading({
         lock: true,
@@ -48,7 +49,7 @@ const options = {
         background: "rgba(0, 0, 0, 0.7)",
       });
       let res = await axios.get(
-          `${ip}/spider/taskJobList/?user_id=${state.user_id}`
+        `${ip}/spider/taskJobList/?user_id=${state.user_id}`
       );
 
       if (res.data.code != 200) {
@@ -252,7 +253,6 @@ const options = {
     async createADataset(state, { form: form, cp: cp }) {
       form.user_id = state.user_id;
       form.model_type = state.modelType;
-      console.log(form);
 
       let res = await axios.post(`${ip}/createDataset`, form);
       if (res.data.code == 200) {
@@ -300,7 +300,7 @@ const options = {
         background: "rgba(0, 0, 0, 0.7)",
       });
       let res = await axios.get(
-          `${ip}/selectAllModel?user_id=${state.user_id}`
+        `${ip}/selectAllModel?user_id=${state.user_id}`
       );
 
       if (res.data.code != 200) {
@@ -319,7 +319,6 @@ const options = {
     },
     async createAModel(state, { form: form, cp: cp }) {
       form.user_id = state.user_id;
-      console.log(form);
 
       let res = await axios.post(`${ip}/createModel`, form);
       if (res.data.code == 200) {
@@ -328,12 +327,97 @@ const options = {
           type: "success",
         });
         cp.form = {
-          name:'',
-          standModel_id:'',
-          limit:null
+          name: "",
+          standModel_id: "",
+          limit: null,
         };
       }
     },
+    async deleteADataset(state, { dataset_id, cp }) {
+      let res = await axios.get(`${ip}/deleteDataset?dataset_id=${dataset_id}`);
+
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "删除成功!",
+        });
+        cp.getAllDataset(cp);
+      } else {
+        cp.$message({
+          type: "error",
+          message: "删除失败!",
+        });
+      }
+    },
+
+    async trainAModel(state, { form, cp }) {
+      let res = await axios.post(`${ip}/trainModel`, form);
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "开始训练成功！",
+        });
+        cp.getAllModel(cp);
+      } else {
+        cp.$message({
+          type: "error",
+          message: "开始训练失败！",
+        });
+      }
+      cp.exitTrain();
+    },
+
+    async stopATrain(state, { model_id, cp }) {
+      let res = await axios.get(`${ip}/stopTrain?model_id=${model_id}`);
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "终止成功！",
+        });
+        cp.getAllModel(cp);
+      } else {
+        cp.$message({
+          type: "error",
+          message: "终止失败！",
+        });
+      }
+    },
+    async getConnectDataset(state) {
+      let res = await axios.get(
+        `${ip}/selectConnectDataset?user_id=${state.user_id}&model_type=${state.modelType}`
+      );
+      if (res.data.code == 200) {
+        var cds = JSON.parse(res.data.data);
+        state.connectDataset = cds.map((cd) => {
+          var obj = cd.fields;
+          obj.id = cd.pk;
+          return obj;
+        });
+      } else {
+        cp.$message({
+          type: "error",
+          message: "数据集获取失败！",
+        });
+      }
+    },
+    async connectToDataset(state,{model_id,dataset_id,cp}){
+      let res = await axios.get(
+        `${ip}/datasetToModel?model_id=${model_id}&dataset_id=${dataset_id}`
+      );
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "关联数据集成功！",
+        });
+        cp.getAllModel(cp);
+        cp.cancelConnect();
+      } else {
+        cp.$message({
+          type: "error",
+          message: "关联数据集失败！",
+        });
+      }
+    }
   },
 };
 

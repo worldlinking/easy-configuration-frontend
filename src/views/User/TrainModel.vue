@@ -6,7 +6,7 @@
           <el-option label="区域一" value="shanghai"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="添加数据集">
+      <!-- <el-form-item label="添加数据集">
         <el-button icon="el-icon-plus" @click="centerDialogVisible = true">请选择</el-button>
         <el-dialog
             title="选择数据集"
@@ -27,7 +27,7 @@
             <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
           </span>
         </el-dialog>
-      </el-form-item>
+      </el-form-item> -->
       <h4>训练配置</h4>
       <el-form-item label="部署方式">
         <span>EasyConfiguration本地部署</span>
@@ -45,7 +45,7 @@
             size="small"
             :header-cell-style="{ background:'#F7F7F7'}">
           <el-table-column label="单选" width="50" align="center">
-            <template scope="scope">
+            <template slot-scope="scope">
               <el-radio
                   :label="scope.$index"
                   v-model="form.currentFactor"
@@ -107,7 +107,7 @@ export default {
       console.log(row)
     },
     addDataset() {
-
+      
     },
     submitForm() {
 
