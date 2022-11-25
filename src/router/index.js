@@ -16,6 +16,7 @@ import CreateModel from "../views/User/CreateModel";
 import TrainModel from "../views/User/TrainModel";
 import VerifyModel from "../views/User/VerifyModel";
 import UseMyModel from "../views/User/UseMyModel";
+import DownLoadModel from "../views/User/DownLoadModel";
 
 import MyDataset from '../views/User/MyDataset.vue'
 
@@ -105,6 +106,10 @@ const routes = [
             path: "UseMyModel",
             component: UseMyModel,
             name: "UseMyModel",
+          },{
+            path:"DownLoadModel",
+            component: DownLoadModel,
+            name:"DownLoadModel"
           }
         ]
       },

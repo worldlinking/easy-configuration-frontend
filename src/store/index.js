@@ -26,6 +26,11 @@ const options = {
     models: [],
     spiderJobs: [],
     connectDataset: [], //所有能关联的数据集：自己的+公有的
+    currentWeightName: [],
+    myPredictImgSrc:
+      "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
+    myPredictZipSrc: "暂无结果",
+    myPredictStatus: 0,
   },
   actions: {},
   mutations: {
@@ -215,6 +220,12 @@ const options = {
       state.predictZipSrc = "暂无结果";
       state.predictStatus = 0;
     },
+    myReUpload(state) {
+      state.myPredictImgSrc =
+        "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780";
+      state.myPredictZipSrc = "暂无结果";
+      state.myPredictStatus = 0;
+    },
     async getAllDataset(state, cp) {
       //查询关联的数据集
       const loading = cp.$loading({
@@ -400,7 +411,7 @@ const options = {
         });
       }
     },
-    async connectToDataset(state,{model_id,dataset_id,cp}){
+    async connectToDataset(state, { model_id, dataset_id, cp }) {
       let res = await axios.get(
         `${ip}/datasetToModel?model_id=${model_id}&dataset_id=${dataset_id}`
       );
@@ -417,7 +428,89 @@ const options = {
           message: "关联数据集失败！",
         });
       }
-    }
+    },
+    async getWeightName(state, { model_id, cp }) {
+      state.currentWeightName = [];
+      let res = await axios.get(`${ip}/getWeightName?model_id=${model_id}`);
+      if (res.data.code == 200) {
+        state.currentWeightName = res.data.data;
+      } else {
+        cp.$message({
+          type: "error",
+          message: "权重获取失败",
+        });
+      }
+    },
+    async useMyModelToPredict(state, { predictForm, cp, predictType }) {
+      if (!predictForm.predict_file) {
+        cp.$message({
+          type: "error",
+          message: "请先上传文件！",
+        });
+        return;
+      }
+
+      state.myPredictStatus = 1;
+      if (predictType == "image") {
+        let postUrl = `${ip}/useTrainedModelToPredictImage`;
+        const formData = new FormData();
+
+        formData.append("model_id", parseInt(predictForm.model_id));
+        formData.append("user_id", state.user_id);
+        formData.append("predict_file", predictForm.predict_file);
+        formData.append("weight_name", predictForm.weightName);
+        const loading = cp.$loading({
+          lock: true,
+          text: "预测中......,请稍等",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        let res = await axios.post(postUrl, formData);
+        loading.close();
+        if (res.data.code == 200) {
+          cp.$message({
+            type: "success",
+            message: "预测成功!",
+          });
+
+          state.myPredictImgSrc = nginxIp + "\\" + res.data.data;
+          state.myPredictStatus = 2;
+        } else {
+          cp.$message({
+            type: "success",
+            message: "预测失败!",
+          });
+          state.myPredictStatus = 3;
+        }
+      } else if (predictType == "zip") {
+        let postUrl = `${ip}/useTrainedModelToPredictZip`;
+        const formData = new FormData();
+        formData.append("model_id", parseInt(predictForm.model_id));
+        formData.append("user_id", state.user_id);
+        formData.append("predict_zip", predictForm.predict_file);
+        formData.append("weight_name", predictForm.weight_name);
+        const loading = cp.$loading({
+          lock: true,
+          text: "预测中......,请稍等",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        let res = await axios.post(postUrl, formData);
+        loading.close();
+        if (res.data.code == 200) {
+          cp.$message({
+            type: "success",
+            message: "预测成功!",
+          });
+          if (state.type === 0) {
+            state.myPredictZipSrc = nginxIp + "\\" + res.data.data;
+          } 
+          state.myPredictStatus = 2;
+        } else {
+          state.myPredictStatus = 3;
+        }
+      }
+    },
   },
 };
 

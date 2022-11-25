@@ -1,5 +1,5 @@
 <template>
-  <div class="useMyModel">
+  <div class="usePublicModel">
     <el-form ref="form" :model="form" label-width="500">
       <el-form-item label="标准模型">
         <el-select
@@ -141,7 +141,6 @@ export default {
   },
   async created() {
     await this.getStandModel();
-    console.log(this.currentStandModel)
   },
   mounted() {},
 
@@ -172,7 +171,6 @@ export default {
       return false;
     },
     beforeSocialUpload(file){
-      console.log(file.type)
       if (file.type == "text/plain" || file.type == "text/csv") {
         this.predictType = "text";
         this.currentFile = file;
@@ -283,7 +281,7 @@ export default {
 </script>
 
 <style scoped>
-.useMyModel {
+.usePublicModel {
   padding-top: 3vh;
   padding-left: 1vw;
 }

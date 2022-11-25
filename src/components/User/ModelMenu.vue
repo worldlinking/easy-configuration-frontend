@@ -19,7 +19,7 @@
         <el-menu-item index="/user/Model/CreateModel">创建模型</el-menu-item>
         <!-- <el-menu-item index="/user/Model/TrainModel">训练模型</el-menu-item> -->
         <el-menu-item index="/user/Model/VerifyModel">校验模型</el-menu-item>
-        <el-menu-item index="2-6">下载模型</el-menu-item>
+        <el-menu-item index="/user/Model/DownLoadModel">下载模型</el-menu-item>
         <el-menu-item index="2-5">发布模型</el-menu-item>
       </el-submenu>
 
@@ -40,7 +40,7 @@
           <span>预测服务</span>
         </template>
         <el-menu-item index="/user/Model/UseMyModel">使用我的模型</el-menu-item>
-        <el-menu-item index="/user/Model/UsePublicModel">使用公开模型</el-menu-item>
+        <el-menu-item index="/user/Model/UsePublicModel">使用官方模型</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
