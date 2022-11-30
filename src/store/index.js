@@ -31,6 +31,7 @@ const options = {
       "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
     myPredictZipSrc: "暂无结果",
     myPredictStatus: 0,
+    publicOthersModels:[]
   },
   actions: {},
   mutations: {
@@ -511,6 +512,19 @@ const options = {
         }
       }
     },
+    async getAllPubicModel(state){
+      let res = await axios.get(`${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`);
+      
+      var models = JSON.parse(res.data.data).map((item) => {
+        var obj = item.fields;
+        obj.id = item.pk;
+        return obj;
+      });
+      state.publicOthersModels = models;
+    },
+    clearCurrentWeightName(state){
+      state.currentWeightName = [];
+    }
   },
 };
 

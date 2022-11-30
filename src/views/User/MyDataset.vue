@@ -25,7 +25,7 @@
         </el-table-column>
         <el-table-column prop="type" label="数据集类型">
           <template slot-scope="scope">
-            {{ datasetType[scope.row.type] }}
+            {{ datasetTypeName[scope.row.type] }}
           </template>
         </el-table-column>
         <el-table-column prop="total_num" label="样本总数">
@@ -99,9 +99,9 @@
           >
             <el-option
               v-for="(item, index) in datasetType"
-              :key="item"
-              :label="item"
-              :value="index"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
@@ -181,12 +181,26 @@ export default {
       dataset: [],
       IoTModelName: [],
       socialModelName: [],
-      datasetType: [
+      datasetTypeName: [
         "训练集",
         "测试集",
         "验证集",
         "训练集和验证集",
         "训练集,验证集和测试集",
+      ],
+      datasetType:[
+        {
+          label:"训练集",
+          value:0
+        },
+        {
+          label:"测试集",
+          value:1
+        },
+        {
+          label:"完整数据集",
+          value:4
+        }
       ],
       limits: ["公共", "私有"],
       dialogFormVisible: false,
@@ -253,6 +267,10 @@ export default {
           //打开上传文件对话框
           this.$refs.upload.$children[0].handleClick();
           break;
+        case 'url':
+          console.log('从接口导入');
+          break;
+
       }
     },
     beforeUpload(file) {

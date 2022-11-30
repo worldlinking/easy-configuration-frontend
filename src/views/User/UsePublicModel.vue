@@ -265,7 +265,6 @@ export default {
       }
     },
     smChange(newSm) {
-      console.log(newSm)
       this.updateCurrentWeight(newSm);
     },
     imgOnError() {
