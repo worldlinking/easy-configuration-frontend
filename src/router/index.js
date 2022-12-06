@@ -17,6 +17,7 @@ import TrainModel from "../views/User/TrainModel";
 import VerifyModel from "../views/User/VerifyModel";
 import UseMyModel from "../views/User/UseMyModel";
 import DownLoadModel from "../views/User/DownLoadModel";
+import CreateStandModel from '../views/Admin/CreateStandModel';
 
 import MyDataset from '../views/User/MyDataset.vue'
 
@@ -119,6 +120,13 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: Admin,
+    children:[
+      {
+        path:"CreateStandModel",
+        component: CreateStandModel,
+        name:"CreateStandModel"
+      }
+    ]
   },
 ];
 
@@ -134,7 +142,7 @@ router.beforeEach((to, form, next) => {
     let info = {
       account: "1",
       pwd: "1",
-      type: "user",
+      type: "admin",
     };
     if (info.type == "user") {
       next({
@@ -143,7 +151,7 @@ router.beforeEach((to, form, next) => {
       });
     } else if ((info.type = "admin")) {
       next({
-        name: "Admin",
+        name: "CreateStandModel",
         params: info,
       });
     }

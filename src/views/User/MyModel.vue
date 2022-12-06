@@ -86,6 +86,18 @@
         align="center"
       >
       </el-table-column>
+      <el-table-column label="LOSS变化" min-width="200" align="center">
+        <template slot-scope="scope">
+          <!-- {{ chartsData[scope.row.id] ? chartsData[scope.row.id] : "" }} -->
+          <div
+            :ref="'chart_' + scope.row.id"
+            v-if="scope.row.status != 0"
+            class="chartContainer"
+            :id="'chart_' + scope.row.id"
+          ></div>
+          <div v-else>暂未开始训练</div>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="status"
         label="模型状态"
@@ -136,7 +148,7 @@
             >重新训练</el-button
           >
           <el-button
-            @click="cancelJob(scope.row)"
+            @click="cancelJob()"
             type="text"
             size="small"
             style="color: red"
@@ -263,6 +275,7 @@
 import axios from "axios";
 import config from "../../assets/configs/config";
 import { mapState, mapMutations } from "vuex";
+import * as echarts from "echarts";
 
 let { ip } = config;
 export default {
@@ -281,11 +294,25 @@ export default {
       currentParams: {},
       datasetInfoShow: false,
       clickDatasetId: "",
+      initCharts: false,
+      interId: 0,
+      charts: {},
     };
+  },
+  created() {
+    // this.getLossData();
+  },
+  beforeDestroy() {
+    clearInterval(this.interId);
   },
   async mounted() {
     this.getAllModel(this);
     this.getConnectDataset();
+    this.getLossData();
+
+    this.interId = setInterval(() => {
+      this.getLossData();
+    }, 1000);
   },
   methods: {
     ...mapMutations([
@@ -294,12 +321,23 @@ export default {
       "stopATrain",
       "getConnectDataset",
       "connectToDataset",
+      "getLossData",
+      "deleteModel",
     ]),
     searchModel() {},
     changeCurrentModel(row) {
       this.currentModel = row;
       switch (this.col) {
         case "train":
+          /* 判断是否关联数据集 */
+          if (!this.currentModel.dataSet__name) {
+            this.$message({
+              message: "请先为模型关联数据集！",
+              type: "warning",
+            });
+            return;
+          }
+
           this.paramsForm = {};
           this.currentParams = JSON.parse(this.currentModel.standModel__params);
           this.paramsShow = true;
@@ -324,6 +362,22 @@ export default {
           break;
         case "clickName":
           this.clickDatasetId = this.currentModel.dataSet__id;
+          break;
+        case "delete":
+          this.$confirm("此操作将永久删除该模型, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              this.deleteModel({ model_id: this.currentModel.id, cp: this });
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消删除",
+              });
+            });
           break;
       }
     },
@@ -367,9 +421,18 @@ export default {
       this.datasetInfoShow = false;
       this.centerDialogVisible = true;
     },
+    cancelJob() {
+      this.col = "delete";
+    },
   },
   computed: {
-    ...mapState(["models", "modelType", "connectDataset", "user_id"]),
+    ...mapState([
+      "models",
+      "modelType",
+      "connectDataset",
+      "user_id",
+      "lossData",
+    ]),
     modelsInType() {
       return this.models.filter((value) => {
         return value.standModel__type == this.modelType;
@@ -396,6 +459,62 @@ export default {
     },
     clickDataset() {
       return this.connectDataset.filter((cd) => cd.id == this.clickDatasetId);
+    },
+    chartsData() {
+      var data = {};
+      for (var id in this.lossData) {
+        var option = {
+          xAxis: {
+            type: "category",
+            data: [],
+          },
+          yAxis: {
+            type: "value",
+            axisPointer: {
+              show: true,
+            },
+          },
+          series: [
+            {
+              data: [],
+              type: "line",
+            },
+          ],
+          tooltip: {
+            show: true,
+          },
+        };
+        for (let i = 0; i < this.lossData[id].length; i++) {
+          option.xAxis.data.push(i + 1);
+          option.series[0].data.push(this.lossData[id][i].toFixed(3));
+        }
+        data[id] = option;
+      }
+      return data;
+    },
+  },
+  watch: {
+    chartsData(newValue, oldValue) {
+      for (var id in newValue) {
+        var dom = document.getElementById(`chart_${id}`);
+
+        let sta = 0;
+        if (!dom) return;
+        if (this.charts[id]) {
+          //判断loss是否变化
+          if (
+            this.charts[id].series[0].data.length ==
+            newValue[id].series[0].data.length
+          ) {
+            sta = 1;
+          }
+        }
+        if (sta == 0) {
+          var myChart = echarts.init(dom);
+          this.charts[id] = newValue[id];
+          myChart.setOption(newValue[id]);
+        }
+      }
     },
   },
 };
@@ -426,5 +545,10 @@ export default {
 .datasetName:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+.chartContainer {
+  width: 10vw;
+  height: 15vh;
+  /* background-color: bisque; */
 }
 </style>

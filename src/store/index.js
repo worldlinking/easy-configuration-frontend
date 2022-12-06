@@ -31,7 +31,8 @@ const options = {
       "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
     myPredictZipSrc: "暂无结果",
     myPredictStatus: 0,
-    publicOthersModels:[]
+    publicOthersModels:[],
+    lossData:[]
   },
   actions: {},
   mutations: {
@@ -524,6 +525,25 @@ const options = {
     },
     clearCurrentWeightName(state){
       state.currentWeightName = [];
+    },
+    async getLossData(state){
+      let res = await axios.get(`${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`);
+      state.lossData = res.data.data;
+    },
+    async deleteModel(state,{model_id,cp}){
+      let res = await axios.get(`${ip}/deleteModel?user_id=${state.user_id}&model_id=${model_id}`);
+      if(res.data.code == 200){
+        cp.$message({
+          message: "删除成功！",
+          type: "success",
+        });
+        cp.getAllModel(cp);
+      }else{
+        cp.$message({
+          message: "删除失败！",
+          type: "error",
+        });
+      }
     }
   },
 };
