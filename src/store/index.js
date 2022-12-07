@@ -31,11 +31,17 @@ const options = {
       "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
     myPredictZipSrc: "暂无结果",
     myPredictStatus: 0,
-    publicOthersModels:[],
-    lossData:[]
+    publicOthersModels: [],
+    lossData: [],
+    allModelName: [],
   },
   actions: {},
   mutations: {
+    async getAllModelName(state) {
+      let res = await axios.get(`${ip}/getAllModelName`);
+      state.allModelName = res.data.data;
+      // console.log(state.allModelName);
+    },
     initModelParams(state, { modelIndex, type, modelName }) {
       state.modelIndex = modelIndex;
       state.type = type;
@@ -506,16 +512,18 @@ const options = {
           });
           if (state.type === 0) {
             state.myPredictZipSrc = nginxIp + "\\" + res.data.data;
-          } 
+          }
           state.myPredictStatus = 2;
         } else {
           state.myPredictStatus = 3;
         }
       }
     },
-    async getAllPubicModel(state){
-      let res = await axios.get(`${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`);
-      
+    async getAllPubicModel(state) {
+      let res = await axios.get(
+        `${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`
+      );
+
       var models = JSON.parse(res.data.data).map((item) => {
         var obj = item.fields;
         obj.id = item.pk;
@@ -523,28 +531,54 @@ const options = {
       });
       state.publicOthersModels = models;
     },
-    clearCurrentWeightName(state){
+    clearCurrentWeightName(state) {
       state.currentWeightName = [];
     },
-    async getLossData(state){
-      let res = await axios.get(`${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`);
+    async getLossData(state) {
+      let res = await axios.get(
+        `${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`
+      );
       state.lossData = res.data.data;
     },
-    async deleteModel(state,{model_id,cp}){
-      let res = await axios.get(`${ip}/deleteModel?user_id=${state.user_id}&model_id=${model_id}`);
-      if(res.data.code == 200){
+    async deleteModel(state, { model_id, cp }) {
+      let res = await axios.get(
+        `${ip}/deleteModel?user_id=${state.user_id}&model_id=${model_id}`
+      );
+      if (res.data.code == 200) {
         cp.$message({
           message: "删除成功！",
           type: "success",
         });
         cp.getAllModel(cp);
-      }else{
+      } else {
         cp.$message({
           message: "删除失败！",
           type: "error",
         });
       }
-    }
+    },
+    async createAStandModel(state, { form, cp }) {
+      let postUrl = `${ip}/uploadStandModel`;
+      const formData = new FormData();
+      formData.append("user_id", state.user_id);
+      for (var key in form) {
+        formData.append(key, form[key]);
+      }
+      const loading = cp.$loading({
+        lock: true,
+        text: "上传中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.post(postUrl, formData);
+      loading.close();
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "上传成功!",
+        });
+      }
+    },
   },
 };
 

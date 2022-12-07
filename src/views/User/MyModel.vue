@@ -548,7 +548,7 @@ export default {
 }
 .chartContainer {
   width: 10vw;
-  height: 15vh;
+  height: 20vh;
   /* background-color: bisque; */
 }
 </style>

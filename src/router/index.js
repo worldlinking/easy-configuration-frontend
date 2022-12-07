@@ -142,7 +142,7 @@ router.beforeEach((to, form, next) => {
     let info = {
       account: "1",
       pwd: "1",
-      type: "admin",
+      type: "user",
     };
     if (info.type == "user") {
       next({
