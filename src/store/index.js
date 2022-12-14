@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const options = {
   state: {
-    user_id: 2,
+    user_id: 1,
     modelIndex: 0,
     type: 0,
     modelName: "目标检测",
@@ -34,6 +34,7 @@ const options = {
     publicOthersModels: [],
     lossData: [],
     allModelName: [],
+    myStandModel: [],
   },
   actions: {},
   mutations: {
@@ -578,6 +579,54 @@ const options = {
           message: "上传成功!",
         });
       }
+    },
+    async importFormUrl(state, { url, format, cp, dataset_id }) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "上传中......请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      let res = await axios.post(`${ip}/importDataFromUrl`, {
+        url,
+        format,
+        dataset_id,
+        user_id: state.user_id,
+      });
+
+      loading.close();
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "上传成功!",
+        });
+        cp.getAllDataset();
+        cp.closeImportShow();
+      } else {
+        cp.$message({
+          type: "error",
+          message: "上传失败!",
+        });
+      }
+    },
+    async getStandModelById(state,{cp}) {
+      //查询关联的标准模型
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      let res = await axios.get(`${ip}/getAllStandModelById?admin_id=${state.user_id}`);
+      loading.close();
+      
+      state.myStandModel = res.data.data.map((item)=>{
+        let obj = item.fields;
+        obj.id = item.pk;
+        return obj;
+      });
     },
   },
 };

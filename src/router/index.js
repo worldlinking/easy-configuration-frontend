@@ -18,6 +18,7 @@ import VerifyModel from "../views/User/VerifyModel";
 import UseMyModel from "../views/User/UseMyModel";
 import DownLoadModel from "../views/User/DownLoadModel";
 import CreateStandModel from '../views/Admin/CreateStandModel';
+import UploadStandModelWeight from '../views/Admin/UploadStandModelWeight.vue';
 
 import MyDataset from '../views/User/MyDataset.vue'
 
@@ -125,6 +126,11 @@ const routes = [
         path:"CreateStandModel",
         component: CreateStandModel,
         name:"CreateStandModel"
+      },
+      {
+        path:"UploadStandModelWeight",
+        component: UploadStandModelWeight,
+        name:"UploadStandModelWeight"
       }
     ]
   },
@@ -142,7 +148,7 @@ router.beforeEach((to, form, next) => {
     let info = {
       account: "1",
       pwd: "1",
-      type: "user",
+      type: "admin",
     };
     if (info.type == "user") {
       next({
