@@ -25,7 +25,7 @@
           <span>模型管理</span>
         </template>
         <el-menu-item index="/admin/CreateStandModel">创建我的标准模型</el-menu-item>
-        <el-menu-item index="">管理我的标准模型</el-menu-item>
+        <el-menu-item index="/admin/ManageModel">管理我的标准模型</el-menu-item>
         <el-menu-item index="/admin/UploadStandModelWeight">管理标准模型权重</el-menu-item>
       </el-submenu>
 

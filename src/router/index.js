@@ -19,6 +19,8 @@ import UseMyModel from "../views/User/UseMyModel";
 import DownLoadModel from "../views/User/DownLoadModel";
 import CreateStandModel from '../views/Admin/CreateStandModel';
 import UploadStandModelWeight from '../views/Admin/UploadStandModelWeight.vue';
+import ManageModel from '../views/Admin/ManageModel.vue'
+import UploadPublicDataset from '../views/Admin/UploadPublicDataset.vue'
 
 import MyDataset from '../views/User/MyDataset.vue'
 
@@ -130,6 +132,16 @@ const routes = [
       {
         path:"UploadStandModelWeight",
         component: UploadStandModelWeight,
+        name:"UploadStandModelWeight"
+      },
+      {
+        path:"ManageModel",
+        component: ManageModel,
+        name:"ManageModel"
+      },
+      {
+        path:"UploadStandModelWeight",
+        component:UploadStandModelWeight,
         name:"UploadStandModelWeight"
       }
     ]

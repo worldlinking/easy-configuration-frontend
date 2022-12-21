@@ -35,6 +35,7 @@ const options = {
     lossData: [],
     allModelName: [],
     myStandModel: [],
+    allStandDataSet: [],
   },
   actions: {},
   mutations: {
@@ -610,7 +611,7 @@ const options = {
         });
       }
     },
-    async getStandModelById(state,{cp}) {
+    async getStandModelById(state, { cp }) {
       //查询关联的标准模型
       const loading = cp.$loading({
         lock: true,
@@ -619,12 +620,19 @@ const options = {
         background: "rgba(0, 0, 0, 0.7)",
       });
 
-      let res = await axios.get(`${ip}/getAllStandModelById?admin_id=${state.user_id}`);
+      let res = await axios.get(
+        `${ip}/getAllStandModelById?admin_id=${state.user_id}`
+      );
       loading.close();
-      
-      state.myStandModel = res.data.data.map((item)=>{
-        let obj = item.fields;
-        obj.id = item.pk;
+
+      state.myStandModel = res.data.data;
+    },
+    async getAllStandDataSet(state) {
+      let res = await axios.get(`${ip}/getAllStandDataSet`);
+      state.allStandDataSet = JSON.parse(res.data.data);
+      state.allStandDataSet = state.allStandDataSet.map((value) => {
+        var obj = value.fields;
+        obj.id = value.pk;
         return obj;
       });
     },
