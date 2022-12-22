@@ -19,8 +19,9 @@ import UseMyModel from "../views/User/UseMyModel";
 import DownLoadModel from "../views/User/DownLoadModel";
 import CreateStandModel from '../views/Admin/CreateStandModel';
 import UploadStandModelWeight from '../views/Admin/UploadStandModelWeight.vue';
-import ManageModel from '../views/Admin/ManageModel.vue'
-import UploadPublicDataset from '../views/Admin/UploadPublicDataset.vue'
+import ManageModel from '../views/Admin/ManageModel.vue';
+import UploadPublicDataset from '../views/Admin/UploadPublicDataset.vue';
+import CreatePublicDataset from '../views/Admin/CreatePublicDataset.vue';
 
 import MyDataset from '../views/User/MyDataset.vue'
 
@@ -140,9 +141,14 @@ const routes = [
         name:"ManageModel"
       },
       {
-        path:"UploadStandModelWeight",
-        component:UploadStandModelWeight,
-        name:"UploadStandModelWeight"
+        path:"UploadPublicDataset",
+        component:UploadPublicDataset,
+        name:"UploadPublicDataset"
+      },
+      {
+        path:"CreatePublicDataset",
+        component:CreatePublicDataset,
+        name:"CreatePublicDataset"
       }
     ]
   },

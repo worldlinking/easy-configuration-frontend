@@ -32,9 +32,9 @@
       <el-submenu index="3">
         <template slot="title">
           <i class="el-icon-upload"></i>
-          <span>数据集管理</span>
+          <span>官方操作</span>
         </template>
-        <el-menu-item index="">上传官方数据集</el-menu-item>
+        <el-menu-item index="/admin/UploadPublicDataset">上传官方数据集</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
