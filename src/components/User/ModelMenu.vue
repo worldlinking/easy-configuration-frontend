@@ -15,12 +15,12 @@
           <i class="el-icon-menu"></i>
           <span>模型中心</span>
         </template>
-        <el-menu-item index="/user/Model/MyModel">我的模型</el-menu-item>
         <el-menu-item index="/user/Model/CreateModel">创建模型</el-menu-item>
+        <el-menu-item index="/user/Model/MyModel">我的模型</el-menu-item>
         <!-- <el-menu-item index="/user/Model/TrainModel">训练模型</el-menu-item> -->
-        <el-menu-item index="/user/Model/VerifyModel">校验模型</el-menu-item>
+        <!-- <el-menu-item index="/user/Model/VerifyModel">校验模型</el-menu-item> -->
         <el-menu-item index="/user/Model/DownLoadModel">下载模型</el-menu-item>
-        <el-menu-item index="2-5">发布模型</el-menu-item>
+        <el-menu-item index="/user/Model/PublicModel">发布模型</el-menu-item>
       </el-submenu>
 
       <el-submenu index="3">
@@ -29,7 +29,7 @@
           <span>数据中心</span>
         </template>
         <el-menu-item index="/user/Model/MyDataset">我的数据集</el-menu-item>
-        <el-menu-item index="3-2">公开数据集</el-menu-item>
+        <el-menu-item index="/user/Model/PublicDataset">公开数据集</el-menu-item>
         <el-menu-item index="3-3">在线标注</el-menu-item>
         <el-menu-item index="/user/Model/SpiderJobList">在线爬取</el-menu-item>
       </el-submenu>

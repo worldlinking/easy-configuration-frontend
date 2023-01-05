@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const options = {
   state: {
-    user_id: 1,
+    user_id: 3,
     modelIndex: 0,
     type: 0,
     modelName: "目标检测",
@@ -36,6 +36,12 @@ const options = {
     allModelName: [],
     myStandModel: [],
     allStandDataSet: [],
+    publicDatasets:[],
+    dataset_type_name:{
+      0:"训练集+验证集",
+      1:"测试集",
+      4:"训练集+测试集+验证集"
+    }
   },
   actions: {},
   mutations: {
@@ -636,6 +642,24 @@ const options = {
         return obj;
       });
     },
+    async getPublicDatasets(state,cp){
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(`${ip}/getAllPublicDataset?user_id=${state.user_id}&model_type=${state.modelType}`);
+      loading.close();
+      if(res.data.code == 200){
+        state.publicDatasets = res.data.data;
+      }else{
+        cp.$message({
+          type:"error",
+          message:"数据加载失败，稍后再试！"
+        });
+      }
+    }
   },
 };
 

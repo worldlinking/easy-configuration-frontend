@@ -24,7 +24,7 @@
           <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item>我的数据集</el-dropdown-item>
           <el-dropdown-item>我的模型</el-dropdown-item>
-          <el-dropdown-item :divided="true" icon="el-icon-switch-button"
+          <el-dropdown-item :divided="true" icon="el-icon-switch-button" @click="zx"
             >注销</el-dropdown-item
           >
         </el-dropdown-menu>
@@ -103,6 +103,10 @@ export default {
       this.$router.replace({
         name:"Navigation"
       });
+    },
+    zx(){
+      //退出登录
+      
     }
   },
 };
