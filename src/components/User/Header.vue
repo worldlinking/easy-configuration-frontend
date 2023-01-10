@@ -15,16 +15,19 @@
     </div>
     <!-- 头像 -->
     <div class="AvatarC" v-if="hasLogIn">
-      <el-dropdown placement="bottom">
+      <el-dropdown placement="bottom" @command="menuClick">
         <el-avatar
           src="https://img.zcool.cn/community/01a6095f110b9fa8012066219b67d4.png@1280w_1l_2o_100sh.png"
           class="el-dropdown-link touX"
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>我的数据集</el-dropdown-item>
-          <el-dropdown-item>我的模型</el-dropdown-item>
-          <el-dropdown-item :divided="true" icon="el-icon-switch-button" @click="zx"
+          <el-dropdown-item command="center">个人中心</el-dropdown-item>
+          <el-dropdown-item command="myDataset">我的数据集</el-dropdown-item>
+          <el-dropdown-item command="myModel">我的模型</el-dropdown-item>
+          <el-dropdown-item
+            :divided="true"
+            icon="el-icon-switch-button"
+            command="zx"
             >注销</el-dropdown-item
           >
         </el-dropdown-menu>
@@ -92,22 +95,30 @@ export default {
         this.hasLogIn = true;
       }
     },
-    doFunc(index){
-        switch(index){
-          case 0:
-            this.home();
-            break;
-        }
+    doFunc(index) {
+      switch (index) {
+        case 0:
+          this.home();
+          break;
+      }
     },
-    home(){
+    home() {
       this.$router.replace({
-        name:"Navigation"
+        name: "Navigation",
       });
     },
-    zx(){
-      //退出登录
-      
-    }
+    menuClick(command) {
+      switch (command) {
+        case "zx":
+          localStorage.removeItem("token");
+          this.$message({
+            type: "success",
+            message: "注销成功！",
+          });
+          this.$router.replace("/");
+          break;
+      }
+    },
   },
 };
 </script>

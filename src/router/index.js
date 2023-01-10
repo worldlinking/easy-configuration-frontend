@@ -24,8 +24,11 @@ import ManageModel from "../views/Admin/ManageModel.vue";
 import UploadPublicDataset from "../views/Admin/UploadPublicDataset.vue";
 import CreatePublicDataset from "../views/Admin/CreatePublicDataset.vue";
 import PublicModel from "../views/User/PublicModel.vue";
-
 import MyDataset from "../views/User/MyDataset.vue";
+
+import axios from 'axios'
+import  config  from "../assets/configs/config";
+let {ip} = config
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -130,10 +133,10 @@ const routes = [
             name: "PublicModel",
           },
           {
-            path:"PublicDataset",
-            component:PublicDataset,
-            name:"PublicDataset"
-          }
+            path: "PublicDataset",
+            component: PublicDataset,
+            name: "PublicDataset",
+          },
         ],
       },
     ],
@@ -167,7 +170,7 @@ const routes = [
         path: "CreatePublicDataset",
         component: CreatePublicDataset,
         name: "CreatePublicDataset",
-      }
+      },
     ],
   },
 ];
@@ -176,16 +179,19 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, form, next) => {
+router.beforeEach(async (to, form, next) => {
   if (to.name === "Index") {
     //通过cookie免除登录
-    let cookie = localStorage.getItem("cookie");
-    //通过cookie获取账户信息
-    let info = {
-      account: "1",
-      pwd: "1",
-      type: "",
-    };
+    let token = localStorage.getItem("token");
+    if(!token){
+      next();
+      return;
+    }
+    //通过token获取账户信息
+    let res = await axios.post(`${ip}/verifyToken`,{
+      token
+    });
+    let info = res.data.data;
     if (info.type == "user") {
       next({
         name: "Navigation",
@@ -196,6 +202,8 @@ router.beforeEach((to, form, next) => {
         name: "CreateStandModel",
         params: info,
       });
+    }else{
+      next();
     }
   } else {
     next();

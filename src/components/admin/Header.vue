@@ -14,7 +14,7 @@
     </div>
     <!-- 头像 -->
     <div class="AvatarC" v-if="hasLogIn">
-      <el-dropdown placement="bottom">
+      <el-dropdown placement="bottom" @command="menuClick">
         <el-avatar
           src="https://ts1.cn.mm.bing.net/th/id/R-C.e48f1d71ef7dd60189d724c04d924a9d?rik=8UP7xylNW91hHw&riu=http%3a%2f%2fbpic.588ku.com%2felement_pic%2f00%2f99%2f23%2f0756f36f5bb25d9.jpg&ehk=S49zFUKyssoH5jD%2f4uAOYeh0xIKDEx2dX4Tfjt53bC8%3d&risl=&pid=ImgRaw&r=0"
           class="el-dropdown-link touX"
@@ -23,7 +23,7 @@
           <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item>我上传的数据集</el-dropdown-item>
           <el-dropdown-item>我上传的标准模型</el-dropdown-item>
-          <el-dropdown-item :divided="true" icon="el-icon-switch-button"
+          <el-dropdown-item :divided="true" icon="el-icon-switch-button" command='zx'
             >注销</el-dropdown-item
           >
         </el-dropdown-menu>
@@ -91,18 +91,30 @@ export default {
         this.hasLogIn = true;
       }
     },
-    doFunc(index){
-        switch(index){
-          case 0:
-            this.home();
-            break;
-        }
+    doFunc(index) {
+      switch (index) {
+        case 0:
+          this.home();
+          break;
+      }
     },
-    home(){
+    home() {
       this.$router.replace({
-        name:"Navigation"
+        name: "Navigation",
       });
-    }
+    },
+    menuClick(command) {
+      switch (command) {
+        case "zx":
+          localStorage.removeItem("token");
+          this.$message({
+            type: "success",
+            message: "注销成功！",
+          });
+          this.$router.replace("/");
+          break;
+      }
+    },
   },
 };
 </script>

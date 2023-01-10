@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 const options = {
   state: {
-    user_id: 3,
+    user_id: 1,
     modelIndex: 0,
     type: 0,
     modelName: "目标检测",
