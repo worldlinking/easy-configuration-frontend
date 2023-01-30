@@ -15,7 +15,7 @@
           <span>用户管理</span>
         </template>
         <el-menu-item index="">用户信息管理</el-menu-item>
-        <el-menu-item index="">用户模型管理</el-menu-item>
+        <el-menu-item index="/admin/UserModelManage">用户模型管理</el-menu-item>
         <el-menu-item index="">用户数据集管理</el-menu-item>
       </el-submenu>
 

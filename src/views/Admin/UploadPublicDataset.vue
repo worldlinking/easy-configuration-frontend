@@ -219,6 +219,8 @@ export default {
   padding-top: 3vh;
   padding-left: 1vw;
   padding-right: 1vw;
+    height: 82vh;
+  overflow: auto;
 }
 .uploadDataBtn {
   width: 30vw;

@@ -25,6 +25,7 @@ import UploadPublicDataset from "../views/Admin/UploadPublicDataset.vue";
 import CreatePublicDataset from "../views/Admin/CreatePublicDataset.vue";
 import PublicModel from "../views/User/PublicModel.vue";
 import MyDataset from "../views/User/MyDataset.vue";
+import UserModelManage from '../views/Admin/UserModelManage.vue'
 
 import axios from 'axios'
 import  config  from "../assets/configs/config";
@@ -171,6 +172,11 @@ const routes = [
         component: CreatePublicDataset,
         name: "CreatePublicDataset",
       },
+      {
+        path: "UserModelManage",
+        component: UserModelManage,
+        name: "UserModelManage",
+      }
     ],
   },
 ];

@@ -243,13 +243,15 @@ export default {
   padding-top: 3vh;
   padding-left: 1vw;
   padding-right: 1vw;
+  height: 82vh;
+  overflow: auto;
 }
 .formCon {
   width: 40vw;
 }
 .paramList {
   /* height: 20vh; */
-  width: 45vw;
+  width: 50vw;
   /* background-color: bisque; */
   /* display: flex;
   justify-content: space-around;
@@ -259,8 +261,8 @@ export default {
 .singleParam {
   display: flex;
   justify-content: space-around;
-  width: 45vw;
-  height: 5vh;
+  width: 50vw;
+  height: 6vh;
   /* background-color: bisque; */
 }
 .singleParamCon {
@@ -272,7 +274,7 @@ export default {
   align-items: center;
 }
 .paramTitle {
-  width: 3vw;
+  width: 5vw;
   font-weight: 500;
 }
 .btnCon {

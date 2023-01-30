@@ -41,7 +41,9 @@ const options = {
       0:"训练集+验证集",
       1:"测试集",
       4:"训练集+测试集+验证集"
-    }
+    },
+    allModels:[],
+    modelStatus: ["未开始训练", "训练中", "训练完成", "训练终止", "训练出错"],
   },
   actions: {},
   mutations: {
@@ -659,6 +661,27 @@ const options = {
           message:"数据加载失败，稍后再试！"
         });
       }
+    },
+    async getAllModels(state,cp){
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(`${ip}/getAllModels`);
+      loading.close();
+      if(res.data.code == 200){
+        state.allModels = res.data.data;
+      }else{
+        cp.$message({
+          message:"数据加载失败，请稍后再试！",
+          type:"error"
+        });
+      }
+    },
+    updateUserId(state,newId){
+      state.user_id = newId;
     }
   },
 };

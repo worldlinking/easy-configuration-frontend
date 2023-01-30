@@ -88,7 +88,6 @@
       </el-table-column>
       <el-table-column label="LOSS变化" min-width="200" align="center">
         <template slot-scope="scope">
-          <!-- {{ chartsData[scope.row.id] ? chartsData[scope.row.id] : "" }} -->
           <div
             :ref="'chart_' + scope.row.id"
             v-if="scope.row.status != 0"
