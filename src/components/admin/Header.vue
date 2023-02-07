@@ -31,7 +31,7 @@
     </div>
 
     <!-- 创建模型按钮 -->
-    <div class="createModelBtnC" v-if="hasLogIn">
+    <!-- <div class="createModelBtnC" v-if="hasLogIn">
       <el-button
         type="primary"
         size="small"
@@ -39,7 +39,7 @@
         style="background-color: rgb(26, 115, 232); width: 5vw; height: 4vh"
         >上传标准模型</el-button
       >
-    </div>
+    </div> -->
 
     <!-- 功能区 -->
     <!-- <div class="funcC">
@@ -151,7 +151,7 @@ export default {
 .AvatarC {
   position: absolute;
   height: 8vh;
-  right: 7vw;
+  right: 2vw;
   display: flex;
   justify-content: center;
   align-items: center;

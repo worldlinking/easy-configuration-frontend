@@ -26,6 +26,10 @@ import CreatePublicDataset from "../views/Admin/CreatePublicDataset.vue";
 import PublicModel from "../views/User/PublicModel.vue";
 import MyDataset from "../views/User/MyDataset.vue";
 import UserModelManage from '../views/Admin/UserModelManage.vue'
+import UserInfoManage from '../views/Admin/UserInfoManage.vue'
+import UserDatasetManage from '../views/Admin/UserDatasetManage.vue'
+import OnlineAnnotation from '../views/User/OnlineAnnotation.vue'
+
 
 import axios from 'axios'
 import  config  from "../assets/configs/config";
@@ -176,6 +180,16 @@ const routes = [
         path: "UserModelManage",
         component: UserModelManage,
         name: "UserModelManage",
+      },
+      {
+        path: "UserInfoManage",
+        component: UserInfoManage,
+        name: "UserInfoManage",
+      },
+      {
+        path: "UserDatasetManage",
+        component: UserDatasetManage,
+        name: "UserDatasetManage",
       }
     ],
   },

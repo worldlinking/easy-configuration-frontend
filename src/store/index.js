@@ -36,14 +36,16 @@ const options = {
     allModelName: [],
     myStandModel: [],
     allStandDataSet: [],
-    publicDatasets:[],
-    dataset_type_name:{
-      0:"训练集+验证集",
-      1:"测试集",
-      4:"训练集+测试集+验证集"
+    publicDatasets: [],
+    dataset_type_name: {
+      0: "训练集+验证集",
+      1: "测试集",
+      4: "训练集+测试集+验证集",
     },
-    allModels:[],
+    allModels: [],
     modelStatus: ["未开始训练", "训练中", "训练完成", "训练终止", "训练出错"],
+    allUsers: [],
+    allUserDatasets: [],
   },
   actions: {},
   mutations: {
@@ -644,25 +646,27 @@ const options = {
         return obj;
       });
     },
-    async getPublicDatasets(state,cp){
+    async getPublicDatasets(state, cp) {
       const loading = cp.$loading({
         lock: true,
         text: "数据加载中......,请稍等",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      let res = await axios.get(`${ip}/getAllPublicDataset?user_id=${state.user_id}&model_type=${state.modelType}`);
+      let res = await axios.get(
+        `${ip}/getAllPublicDataset?user_id=${state.user_id}&model_type=${state.modelType}`
+      );
       loading.close();
-      if(res.data.code == 200){
+      if (res.data.code == 200) {
         state.publicDatasets = res.data.data;
-      }else{
+      } else {
         cp.$message({
-          type:"error",
-          message:"数据加载失败，稍后再试！"
+          type: "error",
+          message: "数据加载失败，稍后再试！",
         });
       }
     },
-    async getAllModels(state,cp){
+    async getAllModels(state, cp) {
       const loading = cp.$loading({
         lock: true,
         text: "数据加载中......,请稍等",
@@ -671,18 +675,54 @@ const options = {
       });
       let res = await axios.get(`${ip}/getAllModels`);
       loading.close();
-      if(res.data.code == 200){
+      if (res.data.code == 200) {
         state.allModels = res.data.data;
-      }else{
+      } else {
         cp.$message({
-          message:"数据加载失败，请稍后再试！",
-          type:"error"
+          message: "数据加载失败，请稍后再试！",
+          type: "error",
         });
       }
     },
-    updateUserId(state,newId){
+    updateUserId(state, newId) {
       state.user_id = newId;
-    }
+    },
+    async getAllUsers(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      var res = await axios.get(`${ip}/getAllUsers`);
+      loading.close();
+      if (res.data.code == 200) {
+        state.allUsers = res.data.data;
+      } else {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+      }
+    },
+    async getAllUserDatasets(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      var res = await axios.get(`${ip}/getAllUserDatasets`);
+      loading.close();
+      if (res.data.code == 200) {
+        state.allUserDatasets = res.data.data;
+      } else {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+      }
+    },
   },
 };
 

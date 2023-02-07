@@ -135,7 +135,7 @@ export default {
     },
     modelShow(index){
       this.$router.push({
-        name:"MyModel",
+        name:"Model",
         params:{
           modelIndex:index,
           type:0

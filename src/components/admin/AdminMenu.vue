@@ -14,9 +14,9 @@
           <i class="el-icon-user-solid"></i>
           <span>用户管理</span>
         </template>
-        <el-menu-item index="">用户信息管理</el-menu-item>
+        <el-menu-item index="/admin/UserInfoManage">用户信息管理</el-menu-item>
         <el-menu-item index="/admin/UserModelManage">用户模型管理</el-menu-item>
-        <el-menu-item index="">用户数据集管理</el-menu-item>
+        <el-menu-item index="/admin/UserDatasetManage">用户数据集管理</el-menu-item>
       </el-submenu>
 
       <el-submenu index="2">
