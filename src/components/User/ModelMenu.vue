@@ -30,7 +30,7 @@
         </template>
         <el-menu-item index="/user/Model/MyDataset">我的数据集</el-menu-item>
         <el-menu-item index="/user/Model/PublicDataset">公开数据集</el-menu-item>
-        <el-menu-item index="3-3">在线标注</el-menu-item>
+        <el-menu-item :index="'/user/Model/'+annPageName">在线标注</el-menu-item>
         <el-menu-item index="/user/Model/SpiderJobList">在线爬取</el-menu-item>
       </el-submenu>
 
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import {mapState}from 'vuex'
 export default {
   name: "EasyConfigurationModelMenu",
 
@@ -63,6 +64,9 @@ export default {
       this.$refs.menus.open(keyPath);
     },
   },
+  computed:{
+    ...mapState(['annPageName']),
+  }
 };
 </script>
 

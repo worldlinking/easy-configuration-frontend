@@ -46,6 +46,7 @@ const options = {
     modelStatus: ["未开始训练", "训练中", "训练完成", "训练终止", "训练出错"],
     allUsers: [],
     allUserDatasets: [],
+    annPageName:"OnlineAnnotationObjectDetection"
   },
   actions: {},
   mutations: {

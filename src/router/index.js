@@ -25,15 +25,14 @@ import UploadPublicDataset from "../views/Admin/UploadPublicDataset.vue";
 import CreatePublicDataset from "../views/Admin/CreatePublicDataset.vue";
 import PublicModel from "../views/User/PublicModel.vue";
 import MyDataset from "../views/User/MyDataset.vue";
-import UserModelManage from '../views/Admin/UserModelManage.vue'
-import UserInfoManage from '../views/Admin/UserInfoManage.vue'
-import UserDatasetManage from '../views/Admin/UserDatasetManage.vue'
-import OnlineAnnotation from '../views/User/OnlineAnnotation.vue'
+import UserModelManage from "../views/Admin/UserModelManage.vue";
+import UserInfoManage from "../views/Admin/UserInfoManage.vue";
+import UserDatasetManage from "../views/Admin/UserDatasetManage.vue";
+import OnlineAnnotationObjectDetection from "../views/User/OnlineAnnotationObjectDetection.vue";
 
-
-import axios from 'axios'
-import  config  from "../assets/configs/config";
-let {ip} = config
+import axios from "axios";
+import config from "../assets/configs/config";
+let { ip } = config;
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -142,6 +141,11 @@ const routes = [
             component: PublicDataset,
             name: "PublicDataset",
           },
+          {
+            path: "OnlineAnnotationObjectDetection",
+            component: OnlineAnnotationObjectDetection,
+            name: "OnlineAnnotationObjectDetection"
+          },
         ],
       },
     ],
@@ -190,7 +194,7 @@ const routes = [
         path: "UserDatasetManage",
         component: UserDatasetManage,
         name: "UserDatasetManage",
-      }
+      },
     ],
   },
 ];
@@ -203,13 +207,13 @@ router.beforeEach(async (to, form, next) => {
   if (to.name === "Index") {
     //通过cookie免除登录
     let token = localStorage.getItem("token");
-    if(!token){
+    if (!token) {
       next();
       return;
     }
     //通过token获取账户信息
-    let res = await axios.post(`${ip}/verifyToken`,{
-      token
+    let res = await axios.post(`${ip}/verifyToken`, {
+      token,
     });
     let info = res.data.data;
     if (info.type == "user") {
@@ -222,7 +226,7 @@ router.beforeEach(async (to, form, next) => {
         name: "CreateStandModel",
         params: info,
       });
-    }else{
+    } else {
       next();
     }
   } else {
