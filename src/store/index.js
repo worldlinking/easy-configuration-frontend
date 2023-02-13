@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import axios from "axios";
 import config from "../assets/configs/config";
+import de from "element-ui/src/locale/lang/de";
 let { ip, nginxIp, modelsName } = config;
 
 Vue.use(Vuex);
@@ -283,14 +284,35 @@ const options = {
         cp.getAllDataset(cp);
       }
     },
-    async importAtData(state, { dataset_id, dataset, cp }) {
+    async duplicate(state, { dataset_id, cp,}) {
+      const formData = new FormData();
+      formData.append("dataset_id", dataset_id);
+      formData.append("user_id", state.user_id);
+      console.log(formData)
+
+      let res = await axios.post(`${ip}/textDuplicate`, formData);
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "数据去重成功",
+        });
+        cp.getAllDataset(cp);
+      } else {
+        cp.$message({
+          type: "error",
+          message: "数据去重失败",
+        });
+      }
+    },
+    async importAtData(state, { dataset_id, dataset, cp ,type,deleteDuplicate}) {
       const formData = new FormData();
 
       formData.append("user_id", state.user_id);
       formData.append("dataset_id", dataset_id);
       formData.append("dataset", dataset);
+      formData.append("deleteDuplicate", deleteDuplicate);
 
-      let res = await axios.post(`${ip}/importData?formatType=zip`, formData);
+      let res = await axios.post(`${ip}/importData?formatType=${type}`, formData);
       if (res.data.code == 200) {
         cp.$message({
           type: "success",
@@ -506,7 +528,7 @@ const options = {
           });
           if (state.type === 0) {
             state.myPredictZipSrc = nginxIp + "\\" + res.data.data;
-          } 
+          }
           state.myPredictStatus = 2;
         } else {
           state.myPredictStatus = 3;
@@ -515,7 +537,7 @@ const options = {
     },
     async getAllPubicModel(state){
       let res = await axios.get(`${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`);
-      
+
       var models = JSON.parse(res.data.data).map((item) => {
         var obj = item.fields;
         obj.id = item.pk;

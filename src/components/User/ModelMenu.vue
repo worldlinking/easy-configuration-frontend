@@ -9,7 +9,7 @@
       background-color="rgb(245,245,245)"
       :router="true"
     >
-      <el-menu-item index="1" style="fontWeight:bolder;">模型介绍</el-menu-item>
+      <el-menu-item index="/user/Model/ModelIntro" style="fontWeight:bolder;">模型介绍</el-menu-item>
       <el-submenu index="2">
         <template slot="title">
           <i class="el-icon-menu"></i>

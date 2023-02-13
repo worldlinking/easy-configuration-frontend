@@ -20,6 +20,7 @@ import DownLoadModel from "../views/User/DownLoadModel";
 import CreateStandModel from '../views/Admin/CreateStandModel';
 
 import MyDataset from '../views/User/MyDataset.vue'
+import ModelIntro from "../views/User/ModelIntro";
 
 const originalReplace = VueRouter.prototype.replace;
 VueRouter.prototype.replace = function (location, onResolve, onReject) {
@@ -63,6 +64,11 @@ const routes = [
         component: Model,
         name: "Model",
         children:[
+          {
+            path: "ModelIntro",
+            component: ModelIntro,
+            name: "ModelIntro",
+          },
           {
             path: "UsePublicModel",
             component: UsePublicModel,
@@ -142,7 +148,7 @@ router.beforeEach((to, form, next) => {
     let info = {
       account: "1",
       pwd: "1",
-      type: "admin",
+      type: "user",
     };
     if (info.type == "user") {
       next({

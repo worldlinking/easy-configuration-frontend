@@ -8,12 +8,13 @@
         <el-select v-model="form.siteName" placeholder="请选择爬取目标网站">
           <el-option label="微博" value="微博"></el-option>
           <el-option label="推特" value="twitter"></el-option>
+          <el-option label="中央气象网" value="weather"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="检索关键词"  prop="keyword">
+      <el-form-item label="检索关键词"  prop="keyword" v-show="form.siteName!=='weather'">
         <el-input v-model="form.keyword"></el-input>
       </el-form-item>
-      <el-form-item label="搜索时间"  prop="searchTime">
+      <el-form-item label="搜索时间"  prop="searchTime" v-show="form.siteName!=='weather'">
         <el-date-picker
             v-model="form.Date"
             type="daterange"
@@ -22,6 +23,14 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="选择地区"  prop="searchRegion">
+        <el-cascader
+            size="large"
+            :options="options"
+            v-model="form.region"
+            @change="handleChange">
+        </el-cascader>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitSpiderJob">立即创建</el-button>
@@ -37,6 +46,7 @@ import config from "../../assets/configs/config";
 
 let { ip } = config;
 import { mapState } from "vuex";
+import { regionData, CodeToText } from 'element-china-area-data'
 
 export default {
   name: "SpiderRequest",
@@ -54,20 +64,24 @@ export default {
       callback();
     };
     return {
+      options:regionData,
+      province:'',
+      city:'',
       form: {
         taskName: '',
         keyword:'',
         siteName: '',
         Date:'',
+        region:null,
       },
       rules:{
         taskName: [{ validator: validatePass, trigger: "change" }],
         siteName: [
           { required: true, message: '请选择爬取目标网站', trigger: 'change' }
         ],
-        keyword: [
-          { required: true, message: '请输入爬取关键词', trigger: 'blur' },
-        ],
+        // keyword: [
+        //   { required: true, message: '请输入爬取关键词', trigger: 'blur' },
+        // ],
       },
     }
   },
@@ -75,6 +89,17 @@ export default {
     ...mapState(["user_id","spiderJobs"])
   },
   methods: {
+    handleChange (value) {
+      let provinceCode=value[0]
+      this.province=CodeToText[provinceCode]
+      let cityCode
+      if(this.province==='北京市'||this.province==='天津市'||this.province==='上海市'||this.province==='重庆市'){
+        cityCode=value[2]
+      }else {
+        cityCode=value[1]
+      }
+      this.city=CodeToText[cityCode].slice(0,-1)
+    },
     async submitSpiderJob() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
@@ -90,10 +115,12 @@ export default {
       const formData = new FormData();
       formData.append("taskName", this.form.taskName);
       formData.append("siteName", this.form.siteName);
-      formData.append("keyword", this.form.keyword);
-      formData.append("startdate", this.form.Date[0]);
-      formData.append("enddate", this.form.Date[1]);
+      // formData.append("keyword", this.form.keyword);
+      // formData.append("startdate", this.form.Date[0]);
+      // formData.append("enddate", this.form.Date[1]);
       formData.append("user_id", this.user_id);
+      formData.append("province", this.province);
+      formData.append("city", this.city);
       let res = await axios.post(postUrl, formData);
 
       if (res.data.code === 200) {

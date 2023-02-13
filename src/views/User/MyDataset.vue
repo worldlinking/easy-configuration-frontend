@@ -35,14 +35,14 @@
         </el-table-column>
         <el-table-column prop="label_num" label="标签总数">
           <template slot-scope="scope">
-            {{ scope.row.total_num ? scope.row.label_num : "暂无数据" }}
+            {{ scope.row.label_num ? scope.row.label_num : "暂无数据" }}
           </template>
         </el-table-column>
         <el-table-column prop="size" label="大小">
           <template slot-scope="scope">
             {{
               scope.row.size
-                ? parseInt(scope.row.size / 1024) + "(MB)"
+                ? parseFloat(scope.row.size / 1024).toFixed(3) + "(MB)"
                 : "暂无数据"
             }}
           </template>
@@ -64,9 +64,12 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="zip">zip导入</el-dropdown-item>
+                  <el-dropdown-item command="spiderJob">爬虫资源导入</el-dropdown-item>
                   <el-dropdown-item command="url">从接口导入</el-dropdown-item>
+                  <el-dropdown-item command="txt">txt导入</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
+              <div  @click="runDuplicateRemove">去重</div>
 
               <div>查看</div>
 
@@ -153,6 +156,59 @@
       :before-upload="beforeUpload"
     >
     </el-upload>
+
+    <!-- 选择爬虫任务表单   -->
+    <el-dialog
+        title="导入已完成的爬虫任务数据"
+        :visible.sync="dialogSpiderFormVisible"
+        width="30%"
+        center
+        class="spiderFormDialog">
+      <div class="formItem">
+        <span style="margin:0.5rem">选择爬虫任务</span>
+        <el-select v-model="spiderJob"  placeholder="请选择爬虫任务" size="small">
+          <el-option
+              v-for="(item, index) in finishedSpiderJob"
+              :key="index"
+              :label="item.taskName"
+              :value="item.id"
+          ></el-option>
+        </el-select>
+      </div>
+<!--      <div class="formItem">-->
+<!--        <span style="margin:0.5rem ">是否数据去重</span>-->
+<!--        <el-radio-group v-model="duplicateRemove">-->
+<!--          <el-radio :label="0">中文去重</el-radio>-->
+<!--          <el-radio :label="1">英文去重</el-radio>-->
+<!--          <el-radio :label="2">不去重</el-radio>-->
+<!--        </el-radio-group>-->
+<!--      </div>-->
+      <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogSpiderFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="uploadSpiderJob">确 定</el-button>
+          </span>
+    </el-dialog>
+
+<!--    &lt;!&ndash; txt文件去重对话框   &ndash;&gt;-->
+<!--    <el-dialog-->
+<!--        title="选择去重操作"-->
+<!--        :visible.sync="dialogTextFormVisible"-->
+<!--        width="30%"-->
+<!--        center-->
+<!--        class="textFormDialog">-->
+<!--      <div class="formItem">-->
+<!--        <el-radio-group v-model="duplicateRemove">-->
+<!--          <el-radio :label="0">中文去重</el-radio>-->
+<!--          <el-radio :label="1">英文去重</el-radio>-->
+<!--          <el-radio :label="2">不去重</el-radio>-->
+<!--        </el-radio-group>-->
+<!--      </div>-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--            <el-button @click="uploadText(0)">取 消</el-button>-->
+<!--            <el-button type="primary" @click="uploadText(1)">确 定</el-button>-->
+<!--          </span>-->
+<!--    </el-dialog>-->
+
   </div>
 </template>
 
@@ -204,6 +260,8 @@ export default {
       ],
       limits: ["公共", "私有"],
       dialogFormVisible: false,
+      dialogTextFormVisible: false,
+      textFile: null,
       form: {
         name: "",
         type: 0,
@@ -220,7 +278,10 @@ export default {
           },
         ],
       },
-      currentDataset: {},
+      currentDataset:{},
+      dialogSpiderFormVisible:false,
+      duplicateRemove:'',
+      spiderJob:null,
     };
   },
 
@@ -231,13 +292,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
-      "getAllDataset",
-      "getStandDataset",
-      "createADataset",
-      "importAtData",
-      "deleteADataset",
-    ]),
+    ...mapMutations(["deleteADataset","getAllDataset", "getStandDataset", "createADataset","importAtData",'getAllSpiderJobs','duplicate']),
     makeFormShow() {
       this.dialogFormVisible = true;
     },
@@ -261,16 +316,24 @@ export default {
         }
       });
     },
-    importData(index) {
+    async importData(index) {
       switch (index) {
         case "zip":
           //打开上传文件对话框
           this.$refs.upload.$children[0].handleClick();
           break;
+        case "spiderJob":
+          this.dialogSpiderFormVisible=true
+          if(!this.spiderJobs.length){
+            await this.getAllSpiderJobs(this)
+          }
+          break;
         case 'url':
           console.log('从接口导入');
           break;
-
+        case 'txt':
+          this.$refs.upload.$children[0].handleClick();
+          break;
       }
     },
     beforeUpload(file) {
@@ -280,6 +343,16 @@ export default {
           dataset_id: this.currentDataset.id,
           dataset: file,
           cp: this,
+        });
+      }
+      else if(file.type == "text/plain" ) {
+        this.textFile=file
+        this.importAtData({
+          dataset_id: this.currentDataset.id,
+          dataset: this.textFile,
+          cp: this,
+          type:'text',
+          deleteDuplicate:'2'
         });
       }
       return false;
@@ -304,6 +377,30 @@ export default {
           });
         });
     },
+    uploadSpiderJob(){
+      this.importAtData({dataset_id:this.currentDataset.id,dataset:this.spiderJob,cp:this,type:'spiderJob',deleteDuplicate:'2'});
+      this.dialogSpiderFormVisible = false
+    },
+    uploadText(value){
+      if(value){
+        this.importAtData({
+          dataset_id: this.currentDataset.id,
+          dataset: this.textFile,
+          cp: this,
+          type:'text',
+          deleteDuplicate:'2'
+        });
+      }
+      // this.dialogTextFormVisible=false
+    },
+    //进行去重
+    runDuplicateRemove(){
+      console.log(this.currentDataset)
+      this.duplicate({
+        dataset_id: this.currentDataset.id,
+        cp: this,
+      })
+    }
   },
   computed: {
     ...mapState([
@@ -312,13 +409,20 @@ export default {
       "modelIndex",
       "modelName",
       "standDataset",
-      "modelType"
+      "spiderJobs",
+      "modelType",
+      "modelType",
     ]),
     datasetsInType() {
       return this.datasets.filter((value) => {
         return value.model_type == this.modelType;
       });
     },
+    finishedSpiderJob(){
+      return this.spiderJobs.filter((value)=>{
+        return value.status = 'finished'
+      })
+    }
   },
 };
 </script>
@@ -355,11 +459,19 @@ export default {
   text-decoration-line: underline;
 }
 
-.doBtnCon div:nth-child(3) {
+.doBtnCon div:nth-child(4) {
   color: red;
 }
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
+}
+
+.spiderFormDialog .formItem{
+  margin-bottom: 1rem;
+}
+
+.textFormDialog .formItem{
+  margin-bottom: 1rem;
 }
 </style>

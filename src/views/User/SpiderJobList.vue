@@ -8,7 +8,7 @@
       <el-table-column
           prop="id"
           label="id"
-          width="150">
+          width="100">
       </el-table-column>
       <el-table-column
           prop="taskName"
@@ -29,6 +29,11 @@
           prop="status"
           label="爬虫状态"
           width="150">
+      </el-table-column>
+      <el-table-column
+          prop="dataNum"
+          label="爬取数量"
+          width="100">
       </el-table-column>
       <el-table-column
           prop="statTime"
@@ -65,9 +70,6 @@ let { ip } = config;
 export default {
   name: "SpiderJobList",
   async mounted() {
-    // let res = await axios.get(`${ip}/spider/taskJobList/`);
-    // this.jobList=res.data.data
-    // this.loadingShow=false
     this.getAllSpiderJobs(this)
   },
   methods: {

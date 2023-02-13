@@ -1,0 +1,104 @@
+{
+    "description":[
+        {
+            "name":"目标检测",
+            "description":"目标检测，也叫目标提取，是一种基于目标几何和统计特征的图像分割，它将目标的分割和识别合二为一，其准确性和实时性是整个系统的一项重要能力。尤其是在复杂场景中，需要对多个目标进行实时处理时，目标自动提取和识别就显得特别重要。",
+            "imgs": [{
+                "path": "/images/object1.png",
+                "title":"目标检测"
+            },{
+                "path": "/images/object2.png",
+                "title":"游戏目标检测"
+            },{
+                "path": "/images/object3.png",
+                "title":"目标检测"
+            }],
+            "models":["yolo v5","Faster-RCNN","CenterNet"],
+            "detail": "预测图像中目标位置和类别。可区分不同实例，并用box进行目标定位"
+        },
+        {
+            "name":"语义分割",
+            "description":"语义分割是图像分割中的基本任务，是指对于图像将每个像素都标注上对应的类别，不区分个体。简单地说，可将视觉输入的数据分为不同的语义可解释性类别。",
+            "imgs": [{
+                "path": "/images/segment1.png",
+                "title":"语义分割"
+            },{
+                "path": "/images/segment2.png",
+                "title":"语义分割"
+            },{
+                "path": "/images/segment3.png",
+                "title":"语义分割"
+            }],
+            "models":["deeplab","Faster-RCNN"],
+            "detail": "在像素级别上对目标分类。可区分不同类别，并用mask进行标记"
+        },
+        {
+            "name":"实例分割",
+            "description":"实例分割（Instance Segmentation）是视觉经典四个任务中相对最难的一个，它既具备语义分割（Semantic Segmentation）的特点，需要做到像素层面上的分类，也具备目标检测（Object Detection）的一部分特点，即需要定位出不同实例，即使它们是同一种类。",
+            "imgs": [{
+                "path": "/images/instance2.png",
+                "title":"实例分割"
+            },{
+                "path": "/images/instance3.png",
+                "title":"实例分割"
+            },{
+                "path": "/images/instance1.png",
+                "title":"实例分割"
+            }
+            ],
+            "models":["YOLACT","Mask R-CNN"],
+            "detail": "1、基于目标检测的自上而下的方案：\n  先检测出图像中实例所在区域，再对候选区进行像素级别分割；\n2、基于语义分割的自下而上的方案：\n  将实例分割看作一个聚类任务，通过将像素分组为图像中呈现的目标实例，最后判断每组的类别；\n"
+        },
+        {
+            "name":"单标签文本分类",
+            "description":"多分类任务中一条数据只有一个标签，但这个标签可能有多种类别。比如判定某个人的性别，只能归类为\"男性\"、\"女性\"其中一个。再比如判断一个文本的情感只能归类为\"正面\"、\"中面\"或者\"负面\"其中一个。",
+            "imgs": [{
+                "path": "/images/singleCategory1.png",
+                "title":"单标签文本分类"
+            },{
+                "path": "/images/singleCategory2.png",
+                "title":"单标签文本分类"
+            },{
+                "path": "/images/singleCategory3.png",
+                "title":"单标签文本分类"
+            }
+            ],
+            "models":["bert","textCNN"],
+            "detail": "文本分类是一个映射的过程，它将未标明类别的文本映射到已有的类别中，该映射可以是一对一或一对多的映射。流程为：1）定义分类体系，即确定具体要分到哪些类。2）将预先分类过的文档作为训练集，对文档做分词、去停用词等准备工作。3）确定表达模型，对文档矩阵进行降维，提取训练集中最有用的特征。4）应用具体的分类模型和分类算法，训练出文本分类器。5）在测试集上测试并评价分类器的性能。6）应用性能最高的分类模型对待分类文档进行分类。"
+        },
+        {
+            "name":"多标签文本分类",
+            "description":"多标签分类任务中一条数据可能有多个标签，每个标签可能有两个或者多个类别（一般两个）。例如，一篇新闻可能同时归类为\"娱乐\"和\"运动\"，也可能只属于\"娱乐\"或者其它类别。",
+            "imgs": [{
+                "path": "/images/MultiCategory1.png",
+                "title":"多标签文本分类"
+            },{
+                "path": "/images/MultiCategory2.png",
+                "title":"多标签文本分类"
+            },{
+                "path": "/images/MultiCategory3.png",
+                "title":"多标签文本分类"
+            }
+            ],
+            "models":["bert","textCNN"],
+            "detail": "1、改变输出概率（probabilities）的计算方式和交叉熵的计算方式,采用sigmoid处理多标签；2、设置多个全连接层，每个全连接层对用一个标签；3、使用框架：Attention + seq2seq（Beam Search），通过上下文语义信息获取多标签之间的关系。"
+        },
+        {
+            "name":"情感分析",
+            "description":"情感分析，也为文本单标签多分类的一种。对人们对产品、服务、组织、个人、问题、事件、话题及其属性的观点、情 感、情绪、评价和态度的计算研究。文本情感分析（Sentiment Analysis）是自然语言处理（NLP）方法中常见的应用，也是一个有趣的基本任务，尤其是以提炼文本情绪内容为目的的分类。它是对带有情感色彩的主观性文本进行分析、处理、归纳和推理的过程。",
+            "imgs": [{
+                "path": "/images/emotion3.png",
+                "title":"情感分析"
+            },{
+                "path": "/images/emotion2.png",
+                "title":"情感分析"
+            },{
+                "path": "/images/emotion1.png",
+                "title":"情感分析"
+            }
+            ],
+            "models":["bert","textCNN"],
+            "detail": "1、基于情感词典（制定一系列的情感词典和规则，对文本进行段落拆解、句法分析，计算情感值，最后通过情感值来作为文本的情感倾向依据）；\n\n2、基于机器学习（主要把问题转换为分类问题来看待，将目标情感分为两类，然后对训练文本进行人工标注，进行有监督的机器学习过程）。"
+        }
+    ]
+}

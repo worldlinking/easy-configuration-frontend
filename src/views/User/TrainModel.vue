@@ -107,7 +107,7 @@ export default {
       console.log(row)
     },
     addDataset() {
-      
+
     },
     submitForm() {
 
@@ -126,6 +126,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 </style>

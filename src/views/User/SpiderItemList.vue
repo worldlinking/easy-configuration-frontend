@@ -6,6 +6,7 @@
       </el-col>
       <el-col :span="6" :offset="12">
         <el-button style="float: right;" type="primary" icon="el-icon-upload"  @click="exportEvent">导出文本内容</el-button>
+        <el-button v-if="taskName==='weather'" style="float: right;margin-right: 1rem" type="primary" icon="el-icon-upload"  @click="showCharts">图表显示</el-button>
       </el-col>
     </el-row>
     <el-table
@@ -31,23 +32,161 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+        title="三维展示"
+        :visible.sync="chartsVisible">
+        <span slot="title" class="dialog-footer">
+          <strong style="margin-right : auto;font-size: 22px">24h气象展示</strong>
+        </span>
+      <div class="chartContainer" ref="chartContainer">
+        <div id="weatherChart"></div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import config from "../../assets/configs/config";
+import * as echarts from "echarts";
 
 let { ip } = config;
 export default {
   name: "SpiderItemList",
+  data() {
+    return {
+      itemList: [],
+      header:[],
+      loadingShow:true,
+      chartsVisible:false,
+      taskName:''
+    }
+  },
   async mounted() {
     let res = await axios.get(`${ip}/spider/itemList/?id=${this.$route.params.id}`);
     this.itemList=res.data.data
+    this.taskName=this.itemList[0].task
     this.header=res.data.header
     this.loadingShow=false
   },
+  computed:{
+    option(){
+      let data={}
+      if (this.taskName==='weather'){
+        data = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              crossStyle: {
+                color: '#999'
+              }
+            }
+          },
+          toolbox: {
+            feature: {
+              dataView: { show: true, readOnly: false },
+              magicType: { show: true, type: ['line', 'bar'] },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          legend: {
+            data: ['Humidity', 'WindSpeed', 'Temperature']
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: [],
+              axisPointer: {
+                type: 'shadow'
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Humidity',
+              min: 0,
+              max: 50,
+              interval: 5,
+              axisLabel: {
+                formatter: '{value} '
+              }
+            },
+            {
+              type: 'value',
+              name: 'Temperature',
+              min: -20,
+              max: 30,
+              interval: 5,
+              axisLabel: {
+                formatter: '{value} °C'
+              }
+            }
+          ],
+          series: [
+            {
+              name: 'WindSpeed',
+              type: 'bar',
+              tooltip: {
+                valueFormatter: function (value) {
+                  return value ;
+                }
+              },
+              data: [
+              ]
+            },
+            {
+              name: 'Humidity',
+              type: 'bar',
+              tooltip: {
+                valueFormatter: function (value) {
+                  return value ;
+                }
+              },
+              data: [
+              ]
+            },
+            {
+              name: 'Temperature',
+              type: 'line',
+              yAxisIndex: 1,
+              tooltip: {
+                valueFormatter: function (value) {
+                  return value + ' °C';
+                }
+              },
+              data: [
+              ]
+            }
+          ]
+        }
+      }
+      for(let i =0;i<this.itemList.length;i++){
+        console.log(this.itemList[i].time)
+        data.xAxis[0].data.push(this.itemList[i].time)
+        data.series[0].data.push(this.itemList[i].windSpeed)
+        data.series[1].data.push(this.itemList[i].humidity)
+        data.series[2].data.push(this.itemList[i].temperature)
+      }
+      return data
+    }
+  },
   methods: {
+    initCharts(){
+      const myChart = echarts.init(document.getElementById('weatherChart'))
+      myChart.setOption(this.option);
+      window.addEventListener('resize',function (){
+        myChart.resize()
+      })
+    },
+    showCharts(){
+      this.chartsVisible=true
+      this.$nextTick( ()=> {
+        this.initCharts()
+      })
+    },
     handleClick(row) {
       let id=row.id
       let siteName=row.siteName
@@ -77,13 +216,7 @@ export default {
     }
   },
 
-  data() {
-    return {
-      itemList: [],
-      header:[],
-      loadingShow:true,
-    }
-  }
+
 }
 </script>
 
@@ -95,5 +228,10 @@ export default {
 }
 .itemTab{
   margin-bottom: 1vh;
+}
+
+#weatherChart{
+  width: 100%;
+  height: 25rem;
 }
 </style>
