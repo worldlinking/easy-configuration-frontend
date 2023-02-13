@@ -3,13 +3,22 @@
     <div class="main">
       <div class="container a-container is-txl" id="a-container">
         <form class="form" id="a-form" method="" action="">
-          <h2 class="form_title title">Easy Configuration</h2>
-          <h2 class="form_title smallTitle">零代码模型定制网站</h2>
-          <input class="form__input" type="text" placeholder="账号" autocomplete="off"/>
-          <input class="form__input" type="password" placeholder="密码" autocomplete="off"/><a
-            class="form__link"
-            >忘记密码?</a
-          >
+          <h2 class="form_title title">物联互联智能感知引擎</h2>
+          <h2 class="form_title smallTitle">Easy Configuration</h2>
+          <el-input
+            class="form__input"
+            type="text"
+            placeholder="账号"
+            autocomplete="off"
+            v-model="account"
+          />
+          <el-input
+            class="form__input"
+            type="password"
+            placeholder="密码"
+            autocomplete="off"
+            v-model="pwd"
+          /><a class="form__link">忘记密码?</a>
           <button class="form__button button submit" @click="login">
             登录
           </button>
@@ -17,14 +26,87 @@
       </div>
 
       <div class="container b-container is-txl" id="b-container">
-        <form class="form" id="b-form" method="" action="">
+        <el-form
+          class="form"
+          id="b-form"
+          method=""
+          action=""
+          :rules="rules"
+          :model="form"
+          ref="form"
+        >
           <h2 class="form_title title">账号注册</h2>
-          <input class="form__input" type="text" placeholder="账号" autocomplete="off"/>
-          <input class="form__input" type="text" placeholder="邮箱" autocomplete="off"/>
-          <input class="form__input" type="password" placeholder="密码" autocomplete="off"/>
-          <input class="form__input" type="password" placeholder="重复密码" autocomplete="off"/>
-          <button class="form__button button submit">注册</button>
-        </form>
+          <el-form-item prop="account">
+            <el-input
+              v-model="form.account"
+              class="form__input input2"
+              type="text"
+              placeholder="账号"
+              autocomplete="off"
+              v-show="!hasZc"
+            />
+          </el-form-item>
+
+          <el-form-item prop="email">
+            <el-input
+              v-model="form.email"
+              class="form__input input2"
+              type="text"
+              placeholder="邮箱"
+              autocomplete="off"
+              v-show="!hasZc"
+            />
+          </el-form-item>
+
+          <el-form-item prop="pwd1">
+            <el-input
+              v-model="form.pwd1"
+              class="form__input input2"
+              type="password"
+              placeholder="密码"
+              autocomplete="off"
+              v-show="!hasZc"
+            />
+          </el-form-item>
+
+          <el-form-item prop="pwd2">
+            <el-input
+              v-model="form.pwd2"
+              class="form__input input2"
+              type="password"
+              placeholder="重复密码"
+              autocomplete="off"
+              v-show="!hasZc"
+            />
+          </el-form-item>
+
+          <el-form-item>
+            <el-input
+              v-model="yzm"
+              class="form__input input2"
+              type="text"
+              placeholder="请输入邮箱收到的验证码(2分钟内有效)"
+              autocomplete="off"
+              v-show="hasZc"
+            />
+          </el-form-item>
+
+          <button
+            class="form__button button submit"
+            @click="startSign"
+            v-show="!hasZc"
+          >
+            注册
+          </button>
+
+          <button
+            class="form__button button submit"
+            @click="submit"
+            v-show="hasZc"
+          >
+            确定
+          </button>
+        </el-form>
       </div>
 
       <div class="switch is-txr" id="switch-cnt">
@@ -52,11 +134,73 @@
 </template>
 
 <script>
+import axios from "axios";
+import config from "../assets/configs/config";
+
+let { ip } = config;
+
 export default {
   name: "Index",
 
   data() {
-    return {};
+    var checkEmail = (rule, value, callback) => {
+      const regEmail =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (regEmail.test(value)) {
+        return callback();
+      }
+      callback(new Error("请输入合法的邮箱！"));
+    };
+    var checkPwd = (rule, value, callback) => {
+      if (value == "") {
+        callback(new Error("请再次输入密码!"));
+        return;
+      } else if (value != this.form.pwd1) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      account: "",
+      pwd: "",
+      hasZc: false,
+      form: {
+        account: "",
+        email: "",
+        pwd1: "",
+        pwd2: "",
+      },
+      yzm: "",
+      rules: {
+        account: [
+          {
+            required: true,
+            message: "请输入账号!",
+            trigger: "blur",
+          },
+        ],
+        pwd1: [
+          {
+            required: true,
+            message: "请输入密码!",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { validator: checkEmail, trigger: "blur" },
+        ],
+        pwd2: [{ validator: checkPwd, trigger: "blur" }],
+        yzm: [
+          {
+            required: true,
+            message: "验证码不可为空!",
+            trigger: "blur",
+          },
+        ],
+      },
+    };
   },
 
   mounted() {
@@ -76,6 +220,7 @@ export default {
       setTimeout(function () {
         switchCtn.classList.remove("is-gx");
       }, 1500);
+      this.changeForm = changeForm;
 
       switchCtn.classList.toggle("is-txr");
       switchCircle[0].classList.toggle("is-txr");
@@ -100,11 +245,87 @@ export default {
   },
 
   methods: {
-    login() {
+    async login() {
       //登录
-      this.$router.push({
-        name: "User",
+      let res = await axios.post(`${ip}/login`, {
+        account: this.account,
+        pwd: this.pwd,
       });
+
+      if (res.data.code == 200) {
+        localStorage.setItem("token", res.data.data.token);
+
+        let info = res.data.data;
+
+        this.$message({
+          message: "登录成功！",
+          type: "success",
+        });
+        if (res.data.data.type == "user") {
+          this.$router.replace({
+            name: "Navigation",
+            params: info,
+          });
+        } else {
+          this.$router.replace({
+            name: "CreateStandModel",
+            params: info,
+          });
+        }
+      } else {
+        this.$message({
+          message: "登录失败，请稍后再试！",
+          type: "error",
+        });
+      }
+    },
+    async startSign() {
+      this.$refs["form"].validate(async (valid) => {
+        if (valid) {
+          let res = await axios.post(`${ip}/sign`, {
+            account: this.form.account,
+            pwd: this.form.pwd1,
+            email: this.form.email,
+          });
+          if (res.data.code == 200) {
+            this.hasZc = true;
+          } else {
+            this.$message({
+              type: "error",
+              message: res.data.info,
+            });
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async submit() {
+      if (this.yzm == "") return;
+      let res = await axios.post(`${ip}/compareYzm`, {
+        account: this.form.account,
+        yzm: this.yzm,
+      });
+      if (res.data.code == 200) {
+        this.$message({
+          type: "success",
+          message: "注册成功！",
+        });
+        // 进入登录页面
+        this.account = this.form.account;
+        this.changeForm();
+      } else if (res.data.code == 499) {
+        this.$message({
+          type: "error",
+          message: "验证码已过期，请重新注册！",
+        });
+        this.hasZc = false;
+      } else {
+        this.$message({
+          type: "error",
+          message: "注册失败，请稍候再试！",
+        });
+      }
     },
   },
 };
@@ -204,7 +425,7 @@ export default {
   width: 350px;
   height: 40px;
   margin: 4px 0;
-  padding-left: 25px;
+  padding-left: 4px;
   font-size: 13px;
   letter-spacing: 0.15px;
   border: none;
@@ -213,10 +434,18 @@ export default {
   background-color: #ecf0f3;
   transition: 0.25s ease;
   border-radius: 8px;
+}
+
+.input2 {
+  padding-left: 0px;
+}
+.el-input >>> .el-input__inner {
+  width: 350px !important;
+  height: 40px;
   box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #f9f9f9;
 }
 .form__input:focus {
-  box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9;
+  /* box-shadow: inset 4px 4px 4px #d1d9e6, inset -4px -4px 4px #f9f9f9; */
 }
 .form__span {
   margin-top: 30px;
@@ -241,7 +470,7 @@ export default {
   font-size: 20px;
   font-weight: bolder;
   line-height: 1;
-  color: rgb(79,125,164);
+  color: rgb(79, 125, 164);
   margin-bottom: 2vh;
 }
 

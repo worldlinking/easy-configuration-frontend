@@ -15,16 +15,19 @@
     </div>
     <!-- 头像 -->
     <div class="AvatarC" v-if="hasLogIn">
-      <el-dropdown placement="bottom">
+      <el-dropdown placement="bottom" @command="menuClick">
         <el-avatar
           src="https://img.zcool.cn/community/01a6095f110b9fa8012066219b67d4.png@1280w_1l_2o_100sh.png"
           class="el-dropdown-link touX"
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>我的数据集</el-dropdown-item>
-          <el-dropdown-item>我的模型</el-dropdown-item>
-          <el-dropdown-item :divided="true" icon="el-icon-switch-button"
+          <el-dropdown-item command="center">个人中心</el-dropdown-item>
+          <el-dropdown-item command="myDataset">我的数据集</el-dropdown-item>
+          <el-dropdown-item command="myModel">我的模型</el-dropdown-item>
+          <el-dropdown-item
+            :divided="true"
+            icon="el-icon-switch-button"
+            command="zx"
             >注销</el-dropdown-item
           >
         </el-dropdown-menu>
@@ -59,6 +62,10 @@
 </template>
 
 <script>
+import axios from 'axios';
+import config from '../../assets/configs/config';
+let {ip} = config;
+import {mapMutations} from 'vuex';
 export default {
   name: "EasyConfigurationHeader",
 
@@ -70,40 +77,52 @@ export default {
   },
 
   mounted() {
-    this.verifyCookies();
+    this.verifyTokens();
   },
   methods: {
-    verifyCookies() {
-      //验证cookie
+    ...mapMutations(['updateUserId']),
+    async verifyTokens() {
       //查看是否通过首页免密登录
       if (this.$route.params && "type" in this.$route.params) {
+        //更新数据
+        this.updateUserId(this.$route.params.uid)
         this.hasLogIn = true;
         return;
       }
-      //通过cookie免除登录
-      let cookie = localStorage.getItem("cookie");
-      //通过cookie获取账户信息
-      let info = {
-        account: "1",
-        pwd: "1",
-        type: "user",
-      };
+      let token = localStorage.getItem("token");
+      let res = await axios.post(`${ip}/verifyToken`, {
+        token,
+      });
+      let info = res.data.data;
       if (info.type == "user") {
+        this.updateUserId(info.uid)
         this.hasLogIn = true;
       }
     },
-    doFunc(index){
-        switch(index){
-          case 0:
-            this.home();
-            break;
-        }
+    doFunc(index) {
+      switch (index) {
+        case 0:
+          this.home();
+          break;
+      }
     },
-    home(){
+    home() {
       this.$router.replace({
-        name:"Navigation"
+        name: "Navigation",
       });
-    }
+    },
+    menuClick(command) {
+      switch (command) {
+        case "zx":
+          localStorage.removeItem("token");
+          this.$message({
+            type: "success",
+            message: "注销成功！",
+          });
+          this.$router.replace("/");
+          break;
+      }
+    },
   },
 };
 </script>

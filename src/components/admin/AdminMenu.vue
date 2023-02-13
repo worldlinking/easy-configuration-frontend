@@ -14,9 +14,9 @@
           <i class="el-icon-user-solid"></i>
           <span>用户管理</span>
         </template>
-        <el-menu-item index="">用户信息管理</el-menu-item>
-        <el-menu-item index="">用户模型管理</el-menu-item>
-        <el-menu-item index="">用户数据集管理</el-menu-item>
+        <el-menu-item index="/admin/UserInfoManage">用户信息管理</el-menu-item>
+        <el-menu-item index="/admin/UserModelManage">用户模型管理</el-menu-item>
+        <el-menu-item index="/admin/UserDatasetManage">用户数据集管理</el-menu-item>
       </el-submenu>
 
       <el-submenu index="2">
@@ -24,17 +24,17 @@
           <i class="el-icon-menu"></i>
           <span>模型管理</span>
         </template>
-        <el-menu-item index="">创建标准模型</el-menu-item>
-        <el-menu-item index="">管理我的标准模型</el-menu-item>
-        <el-menu-item index="">上传标准模型权重</el-menu-item>
+        <el-menu-item index="/admin/CreateStandModel">创建我的标准模型</el-menu-item>
+        <el-menu-item index="/admin/ManageModel">管理我的标准模型</el-menu-item>
+        <el-menu-item index="/admin/UploadStandModelWeight">管理标准模型权重</el-menu-item>
       </el-submenu>
 
       <el-submenu index="3">
         <template slot="title">
           <i class="el-icon-upload"></i>
-          <span>数据集管理</span>
+          <span>官方操作</span>
         </template>
-        <el-menu-item index="">上传官方数据集</el-menu-item>
+        <el-menu-item index="/admin/UploadPublicDataset">上传官方数据集</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>

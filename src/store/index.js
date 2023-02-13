@@ -10,7 +10,7 @@ Vue.use(Vuex);
 
 const options = {
   state: {
-    user_id: 2,
+    user_id: 1,
     modelIndex: 0,
     type: 0,
     modelName: "目标检测",
@@ -32,11 +32,30 @@ const options = {
       "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
     myPredictZipSrc: "暂无结果",
     myPredictStatus: 0,
-    publicOthersModels:[],
-    lossData:[]
+    publicOthersModels: [],
+    lossData: [],
+    allModelName: [],
+    myStandModel: [],
+    allStandDataSet: [],
+    publicDatasets: [],
+    dataset_type_name: {
+      0: "训练集+验证集",
+      1: "测试集",
+      4: "训练集+测试集+验证集",
+    },
+    allModels: [],
+    modelStatus: ["未开始训练", "训练中", "训练完成", "训练终止", "训练出错"],
+    allUsers: [],
+    allUserDatasets: [],
+    annPageName:"OnlineAnnotationObjectDetection"
   },
   actions: {},
   mutations: {
+    async getAllModelName(state) {
+      let res = await axios.get(`${ip}/getAllModelName`);
+      state.allModelName = res.data.data;
+      // console.log(state.allModelName);
+    },
     initModelParams(state, { modelIndex, type, modelName }) {
       state.modelIndex = modelIndex;
       state.type = type;
@@ -535,8 +554,10 @@ const options = {
         }
       }
     },
-    async getAllPubicModel(state){
-      let res = await axios.get(`${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`);
+    async getAllPubicModel(state) {
+      let res = await axios.get(
+        `${ip}/getAllPubicModel?model_type=${state.modelType}&user_id=${state.user_id}`
+      );
 
       var models = JSON.parse(res.data.data).map((item) => {
         var obj = item.fields;
@@ -545,28 +566,186 @@ const options = {
       });
       state.publicOthersModels = models;
     },
-    clearCurrentWeightName(state){
+    clearCurrentWeightName(state) {
       state.currentWeightName = [];
     },
-    async getLossData(state){
-      let res = await axios.get(`${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`);
+    async getLossData(state) {
+      let res = await axios.get(
+        `${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`
+      );
       state.lossData = res.data.data;
     },
-    async deleteModel(state,{model_id,cp}){
-      let res = await axios.get(`${ip}/deleteModel?user_id=${state.user_id}&model_id=${model_id}`);
-      if(res.data.code == 200){
+    async deleteModel(state, { model_id, cp }) {
+      let res = await axios.get(
+        `${ip}/deleteModel?user_id=${state.user_id}&model_id=${model_id}`
+      );
+      if (res.data.code == 200) {
         cp.$message({
           message: "删除成功！",
           type: "success",
         });
         cp.getAllModel(cp);
-      }else{
+      } else {
         cp.$message({
           message: "删除失败！",
           type: "error",
         });
       }
-    }
+    },
+    async createAStandModel(state, { form, cp }) {
+      let postUrl = `${ip}/uploadStandModel`;
+      const formData = new FormData();
+      formData.append("user_id", state.user_id);
+      for (var key in form) {
+        formData.append(key, form[key]);
+      }
+      const loading = cp.$loading({
+        lock: true,
+        text: "上传中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.post(postUrl, formData);
+      loading.close();
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "上传成功!",
+        });
+      }
+    },
+    async importFormUrl(state, { url, format, cp, dataset_id }) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "上传中......请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      let res = await axios.post(`${ip}/importDataFromUrl`, {
+        url,
+        format,
+        dataset_id,
+        user_id: state.user_id,
+      });
+
+      loading.close();
+      if (res.data.code == 200) {
+        cp.$message({
+          type: "success",
+          message: "上传成功!",
+        });
+        cp.getAllDataset();
+        cp.closeImportShow();
+      } else {
+        cp.$message({
+          type: "error",
+          message: "上传失败!",
+        });
+      }
+    },
+    async getStandModelById(state, { cp }) {
+      //查询关联的标准模型
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
+      let res = await axios.get(
+        `${ip}/getAllStandModelById?admin_id=${state.user_id}`
+      );
+      loading.close();
+
+      state.myStandModel = res.data.data;
+    },
+    async getAllStandDataSet(state) {
+      let res = await axios.get(`${ip}/getAllStandDataSet`);
+      state.allStandDataSet = JSON.parse(res.data.data);
+      state.allStandDataSet = state.allStandDataSet.map((value) => {
+        var obj = value.fields;
+        obj.id = value.pk;
+        return obj;
+      });
+    },
+    async getPublicDatasets(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(
+        `${ip}/getAllPublicDataset?user_id=${state.user_id}&model_type=${state.modelType}`
+      );
+      loading.close();
+      if (res.data.code == 200) {
+        state.publicDatasets = res.data.data;
+      } else {
+        cp.$message({
+          type: "error",
+          message: "数据加载失败，稍后再试！",
+        });
+      }
+    },
+    async getAllModels(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      let res = await axios.get(`${ip}/getAllModels`);
+      loading.close();
+      if (res.data.code == 200) {
+        state.allModels = res.data.data;
+      } else {
+        cp.$message({
+          message: "数据加载失败，请稍后再试！",
+          type: "error",
+        });
+      }
+    },
+    updateUserId(state, newId) {
+      state.user_id = newId;
+    },
+    async getAllUsers(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      var res = await axios.get(`${ip}/getAllUsers`);
+      loading.close();
+      if (res.data.code == 200) {
+        state.allUsers = res.data.data;
+      } else {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+      }
+    },
+    async getAllUserDatasets(state, cp) {
+      const loading = cp.$loading({
+        lock: true,
+        text: "数据加载中......,请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      var res = await axios.get(`${ip}/getAllUserDatasets`);
+      loading.close();
+      if (res.data.code == 200) {
+        state.allUserDatasets = res.data.data;
+      } else {
+        cp.$message({
+          message: "加载失败！请检查网络后重试！",
+          type: "error",
+        });
+      }
+    },
   },
 };
 

@@ -209,6 +209,31 @@
 <!--          </span>-->
 <!--    </el-dialog>-->
 
+
+    <el-dialog title="从url导入数据" :visible.sync="urlImportShow">
+      <el-form>
+        <el-form-item label="填写url">
+          <el-input v-model="url" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="格式">
+          <el-select
+            v-model="format"
+            placeholder="请选择数据集格式"
+            style="width: 100%"
+          >
+            <el-option
+              label="zip"
+              value="zip"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="urlImportShow = false">取 消</el-button>
+        <el-button type="primary" @click="urlImport">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -244,19 +269,20 @@ export default {
         "训练集和验证集",
         "训练集,验证集和测试集",
       ],
-      datasetType:[
+      urlImportShow: false,
+      datasetType: [
         {
-          label:"训练集",
-          value:0
+          label: "训练集",
+          value: 0,
         },
         {
-          label:"测试集",
-          value:1
+          label: "测试集",
+          value: 1,
         },
         {
-          label:"完整数据集",
-          value:4
-        }
+          label: "完整数据集",
+          value: 4,
+        },
       ],
       limits: ["公共", "私有"],
       dialogFormVisible: false,
@@ -282,6 +308,8 @@ export default {
       dialogSpiderFormVisible:false,
       duplicateRemove:'',
       spiderJob:null,
+      url: "",
+      format: "",
     };
   },
 
@@ -292,7 +320,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["deleteADataset","getAllDataset", "getStandDataset", "createADataset","importAtData",'getAllSpiderJobs','duplicate']),
+    ...mapMutations(["deleteADataset","getAllDataset", "getStandDataset", "createADataset","importAtData",'getAllSpiderJobs','duplicate',"importFormUrl"]),
+
     makeFormShow() {
       this.dialogFormVisible = true;
     },
@@ -328,8 +357,8 @@ export default {
             await this.getAllSpiderJobs(this)
           }
           break;
-        case 'url':
-          console.log('从接口导入');
+        case "url":
+          this.urlImportShow = true;
           break;
         case 'txt':
           this.$refs.upload.$children[0].handleClick();
@@ -368,7 +397,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          this.deleteADataset({dataset_id:this.currentDataset.id, cp:this});
+          this.deleteADataset({ dataset_id: this.currentDataset.id, cp: this });
         })
         .catch(() => {
           this.$message({
@@ -400,6 +429,14 @@ export default {
         dataset_id: this.currentDataset.id,
         cp: this,
       })
+    },
+    urlImport() {
+      this.importFormUrl({ cp: this, url: this.url,format:this.format,dataset_id:this.currentDataset.id });
+    },
+    closeImportShow(){
+      this.urlImportShow = false;
+      this.url = '';
+      this.format = '';
     }
   },
   computed: {
@@ -409,9 +446,8 @@ export default {
       "modelIndex",
       "modelName",
       "standDataset",
+      "modelType",
       "spiderJobs",
-      "modelType",
-      "modelType",
     ]),
     datasetsInType() {
       return this.datasets.filter((value) => {
