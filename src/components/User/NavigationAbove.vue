@@ -6,8 +6,8 @@
         <el-button
           type="primary"
           size="medium"
-          @click=""
-          class="nabBtn"
+          @click="selectModel"
+          class="nabBtn btn1"
           style="
             backgroundColor: rgb(2, 111, 228);
             border: 0;
@@ -20,7 +20,7 @@
           type="primary"
           size="medium"
           @click=""
-          class="nabBtn"
+          class="nabBtn btn2"
           style="
             backgroundColor: #fff;
             border: 0;
@@ -37,7 +37,7 @@
         <div class="navTitle">
           零算法基础
           <br />
-          定制高精度AI模型
+          定制物联互联AI模型
         </div>
         <div class="navChooses">
           <div class="navChoose">
@@ -62,12 +62,18 @@
 <script>
 export default {
   name: "EasyConfigurationNavigationAbove",
-
+  props:{
+    makeDialogShow:Function
+  },
   data() {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    selectModel(){
+      this.makeDialogShow('intro');
+    }
+  },
 };
 </script>
 
@@ -138,5 +144,12 @@ export default {
 .navChoose:hover {
   cursor: pointer;
   opacity: 50%;
+}
+.btn1:hover{
+  background-color: #0192e6 !important;
+}
+.btn2:hover{
+  color: #23A8F2 !important;
+  /* border: 2px solid black !important; */
 }
 </style>

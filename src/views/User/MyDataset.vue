@@ -66,12 +66,12 @@
                   <el-dropdown-item command="zip">zip导入</el-dropdown-item>
                   <el-dropdown-item command="spiderJob">爬虫资源导入</el-dropdown-item>
                   <el-dropdown-item command="url">从接口导入</el-dropdown-item>
-                  <el-dropdown-item command="txt">txt导入</el-dropdown-item>
+                  <el-dropdown-item command="txt"  v-if="type != 0">txt导入</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-              <div  @click="runDuplicateRemove">去重</div>
+              <div  @click="runDuplicateRemove" v-if="type != 0">去重</div>
 
-              <div>查看</div>
+              <div @click="seeDataset">查看</div>
 
               <div @click="deleteDataset">删除</div>
             </div>
@@ -437,6 +437,9 @@ export default {
       this.urlImportShow = false;
       this.url = '';
       this.format = '';
+    },
+    seeDataset(){
+      console.log(this.type);
     }
   },
   computed: {

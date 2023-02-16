@@ -136,7 +136,7 @@ export default {
       currentPointY: -1,
       leftX: -1,
       topY: -1,
-      currentImg: {},
+      currentImg: null,
       currentRects: [],
       currentWidth: -1,
       currentHeight: -1,
@@ -180,6 +180,19 @@ export default {
       );
       this.currentDataset = selectDataset;
       this.getImageList();
+      this.currentRects = [];
+      this.currentImgStatus = -1;
+      this.currentLabelIndex = -1;
+      this.currentImgName = '';
+      this.currentImgIndex = -1;
+      this.hasClick = false;
+      if (this.currentImg) {
+        this.ctx.clearRect(0, 0, this.currentImg.width, this.currentImg.height);
+        this.currentImg = null;
+
+        this.draw();
+        this.paintStatus = -1;
+      }
     },
     async getImageList() {
       let res = await axios.get(
@@ -293,13 +306,18 @@ export default {
       this.paintStatus = 1;
     },
     draw() {
-      this.ctx.clearRect(0, 0, this.currentImg.width, this.currentImg.height);
+      if (this.currentImg) {
+        this.ctx.clearRect(0, 0, this.currentImg.width, this.currentImg.height);
+      }
+
       // this.ctx.strokeStyle = this.currentLabelColor;
       this.ctx.lineWidth = 2; //进一步加粗线条
 
       this.ctx.font = "25px Arial";
 
-      this.ctx.drawImage(this.currentImg, 0, 0);
+      if (this.currentImg) {
+        this.ctx.drawImage(this.currentImg, 0, 0);
+      }
 
       for (var rect of this.currentRects) {
         this.ctx.strokeStyle = rect.color;
@@ -421,7 +439,7 @@ export default {
         (item) => item.label == this.currentFolder
       );
       var index = -1;
-      if (this.currentImgIndex == (this.imgListData[index1].children.length - 1))
+      if (this.currentImgIndex == this.imgListData[index1].children.length - 1)
         index = 0;
       else index = this.currentImgIndex + 1;
       this.currentImgIndex = index;

@@ -25,9 +25,8 @@
         互联感知>
       </div>
       <div class="gzData">
-        <div class="gzSData">推特数据</div>
-        <div class="gzSData">微博数据</div>
-        <div class="gzSData">微博数据</div>
+        <div class="gzSData">社交媒体</div>
+        <div class="gzSData">公开网站</div>
       </div>
       <div class="gzLine"></div>
       <div class="gzDesc">
@@ -81,7 +80,8 @@ export default {
   box-shadow: 0 0 3px 0 gray;
 }
 .gzNav:hover {
-  border: 2px rgb(2, 111, 228) solid;
+  /* border: 2px rgb(2, 111, 228) solid; */
+  box-shadow: 0px 0px 10px  rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 .gzNav:hover .gzHeader {

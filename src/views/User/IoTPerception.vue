@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PerceptionAbove :isIoT="true" :Title="Title"></PerceptionAbove>
+    <PerceptionAbove :isIoT="true" :Title="Title" :makeDialogShow='makeDialogShow'></PerceptionAbove>
     <div class="IoTPerceptionBelowCon">
       <IoTPerceptionBelow></IoTPerceptionBelow>
     </div>
@@ -24,15 +24,19 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    makeDialogShow(){
+      this.dialogTableVisible = true;
+    }
+  },
 };
 </script>
 
 <style scoped>
-.IoTPerceptionBelowCon{
-    width: 100vw;
-    height: 42vh;
-    display: flex;
-    justify-content: center;
+.IoTPerceptionBelowCon {
+  width: 100vw;
+  height: 42vh;
+  display: flex;
+  justify-content: center;
 }
 </style>

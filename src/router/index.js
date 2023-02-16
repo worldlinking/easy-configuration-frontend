@@ -30,7 +30,7 @@ import UserInfoManage from "../views/Admin/UserInfoManage.vue";
 import UserDatasetManage from "../views/Admin/UserDatasetManage.vue";
 import OnlineAnnotationObjectDetection from "../views/User/OnlineAnnotationObjectDetection.vue";
 
-import MyDataset from '../views/User/MyDataset.vue'
+// import MyDataset from '../views/User/MyDataset.vue'
 import ModelIntro from "../views/User/ModelIntro";
 import axios from "axios";
 import config from "../assets/configs/config";

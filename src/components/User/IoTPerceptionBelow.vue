@@ -35,95 +35,17 @@
 </template>
 
 <script>
+import utils from '../../assets/configs/config'
+var {IoTs,IOTModels} = utils;
 export default {
   name: "EasyConfigurationIoTPerceptionBelow",
 
   data() {
+    var models = IOTModels;
     return {
-      IoTs: ["可见光传感器", "红外传感器", "激光雷达传感器", "声光气液传感器"],
+      IoTs,
       currentIndex: 0,
-      models: [
-        [
-          {
-            backPath: "/images/od.jpg",
-            title: "目标检测",
-            smallTile: "目标检测的任务是找出图像中感兴趣的目标",
-            index:0,
-          },
-          {
-            backPath: "/images/yf.jpg",
-            title: "语义分割",
-            smallTile: "将原始数据转换为感兴趣区域的掩模",
-            index:1
-          },
-          {
-            backPath: "/images/is.png",
-            title: "实例分割",
-            smallTile: "将原始数据转换为感兴趣区域的掩模",
-            index:2
-          },
-        ],
-        [
-          {
-            backPath: "",
-            title: "模型1",
-            smallTile: "模型1描述",
-            index:3,
-          },
-          {
-            backPath: "",
-            title: "模型2",
-            smallTile: "模型2描述",
-            index:4
-          },
-          {
-            backPath: "",
-            title: "模型3",
-            smallTile: "模型3描述",
-            index:5
-          },
-        ],
-        [
-          {
-            backPath: "",
-            title: "模型1",
-            smallTile: "模型1描述",
-            index:6
-          },
-          {
-            backPath: "",
-            title: "模型2",
-            smallTile: "模型2描述",
-            index:7
-          },
-          {
-            backPath: "",
-            title: "模型3",
-            smallTile: "模型3描述",
-            index:8
-          },
-        ],
-        [
-          {
-            backPath: "",
-            title: "模型1",
-            smallTile: "模型1描述",
-            index:9
-          },
-          {
-            backPath: "",
-            title: "模型2",
-            smallTile: "模型2描述",
-            index:10
-          },
-          {
-            backPath: "",
-            title: "模型3",
-            smallTile: "模型3描述",
-            index:11
-          },
-        ],
-      ],
+      models
     };
   },
 
@@ -135,7 +57,7 @@ export default {
     },
     modelShow(index){
       this.$router.push({
-        name:"Model",
+        name:"ModelIntro",
         params:{
           modelIndex:index,
           type:0

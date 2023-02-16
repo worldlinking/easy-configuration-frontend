@@ -22,8 +22,8 @@
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="center">个人中心</el-dropdown-item>
-          <el-dropdown-item command="myDataset">我的数据集</el-dropdown-item>
-          <el-dropdown-item command="myModel">我的模型</el-dropdown-item>
+          <el-dropdown-item command="myDataset" @click.native="myDataset">我的数据集</el-dropdown-item>
+          <el-dropdown-item command="myModel"  @click.native="myModel">我的模型</el-dropdown-item>
           <el-dropdown-item
             :divided="true"
             icon="el-icon-switch-button"
@@ -35,7 +35,7 @@
     </div>
 
     <!-- 创建模型按钮 -->
-    <div class="createModelBtnC" v-if="hasLogIn">
+    <!-- <div class="createModelBtnC" v-if="hasLogIn">
       <el-button
         type="primary"
         size="small"
@@ -43,7 +43,7 @@
         style="background-color: rgb(26, 115, 232); width: 5vw; height: 4vh"
         >创建模型</el-button
       >
-    </div>
+    </div> -->
 
     <!-- 功能区 -->
     <div class="funcC">
@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       hasLogIn: false,
-      funcs: ["首页", "产品介绍", "使用文档", "应用案例", "社区"],
+      funcs: ["首页", "产品介绍", "使用文档", "应用案例"],
     };
   },
 
@@ -123,6 +123,12 @@ export default {
           break;
       }
     },
+    myDataset(){
+      this.$bus.$emit('dialogShow','dataset');
+    },
+    myModel(){
+      this.$bus.$emit('dialogShow','model');
+    }
   },
 };
 </script>
@@ -159,7 +165,7 @@ export default {
 .AvatarC {
   position: absolute;
   height: 8vh;
-  right: 7vw;
+  right: 1vw;
   display: flex;
   justify-content: center;
   align-items: center;

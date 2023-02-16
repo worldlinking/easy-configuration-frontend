@@ -18,34 +18,15 @@
 </template>
 
 <script>
+import utils from "../../assets/configs/config";
+var { socialsModel } = utils;
 export default {
   name: "EasyConfigurationSocialPerceptionBelow",
 
   data() {
+    var models = socialsModel[0];
     return {
-      models: [
-        {
-          backPath: "/images/test.png",
-          title: "文本分类-单分类",
-          smallTile:
-            "定制分类标签实现文本内容的自动分类，每个文本属于一种标签类型",
-          index: 0,
-        },
-        {
-          backPath: "/images//test.png",
-          title: "文本分类-多分类",
-          smallTile:
-            "定制分类标签实现文本内容的自动分类，每个文本可以属于多个标签类型",
-          index: 1,
-        },
-        {
-          backPath: "/images//test.png",
-          title: "情感分析",
-          smallTile:
-            "又称倾向性分析或观点挖掘，可自动挖掘文本中的立场、观点、看法、情绪和喜恶等。",
-          index: 2,
-        },
-      ],
+      models
     };
   },
 
@@ -54,7 +35,7 @@ export default {
   methods: {
     modelShow(index) {
       this.$router.push({
-        name: "Model",
+        name: "ModelIntro",
         params: {
           modelIndex: index,
           type: 1,
