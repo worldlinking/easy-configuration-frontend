@@ -16,7 +16,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="coco格式标注区"> </el-form-item>
+      <el-form-item :label="currentDataset.standDataset__data_type?currentDataset.standDataset__data_type + '格式标注区':'标注区'"> </el-form-item>
     </el-form>
 
     <div class="annCon">
@@ -179,6 +179,9 @@ export default {
         (item) => item.name == datasetName
       );
       this.currentDataset = selectDataset;
+
+      console.log(this.currentDataset);
+
       this.getImageList();
       this.currentRects = [];
       this.currentImgStatus = -1;

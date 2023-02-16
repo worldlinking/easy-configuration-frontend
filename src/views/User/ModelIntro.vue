@@ -48,7 +48,6 @@ export default {
   mounted() {
     const descriptJson = require("../../assets/data/modelDescriptions.json");
     this.modelDescription=descriptJson.description[this.modelType]
-    console.log(this.modelDescription)
   }
 }
 </script>
@@ -62,7 +61,7 @@ export default {
 
 .title{
   font-size: 16px;
-  margin-bottom: 5vh;
+  margin-bottom: 4vh;
 }
 
 .small {

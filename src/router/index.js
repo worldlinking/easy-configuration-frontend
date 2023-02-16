@@ -29,6 +29,7 @@ import UserModelManage from "../views/Admin/UserModelManage.vue";
 import UserInfoManage from "../views/Admin/UserInfoManage.vue";
 import UserDatasetManage from "../views/Admin/UserDatasetManage.vue";
 import OnlineAnnotationObjectDetection from "../views/User/OnlineAnnotationObjectDetection.vue";
+import IOTDatasetDetail from '../views/User/IOTDatasetDetail.vue'
 
 // import MyDataset from '../views/User/MyDataset.vue'
 import ModelIntro from "../views/User/ModelIntro";
@@ -153,6 +154,11 @@ const routes = [
             component: OnlineAnnotationObjectDetection,
             name: "OnlineAnnotationObjectDetection"
           },
+          {
+            path:"IOTDatasetDetail",
+            component:IOTDatasetDetail,
+            name:"IOTDatasetDetail"
+          }
         ],
       },
     ],

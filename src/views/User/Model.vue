@@ -78,5 +78,6 @@ export default {
   height: 92vh;
   width: 85vw;
   position: relative;
+  overflow-x: hidden;
 }
 </style>
