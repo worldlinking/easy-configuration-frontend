@@ -1,7 +1,7 @@
 <template>
   <div class="publishModel">
     <div class="seeShow">
-      <el-button type="primary" size="default" @click="">查看演示</el-button>
+      <!-- <el-button type="primary" size="default" @click="">查看演示</el-button> -->
     </div>
     <el-table
       :data="trainedModels"

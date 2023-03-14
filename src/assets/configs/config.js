@@ -4,6 +4,7 @@ export default {
   nginxWeightIp: "http://127.0.0.1:8001/weights",
   nginxStandWeightIp: "http://127.0.0.1:8001/standmodelweight",
   nginxDatasetsIp: "http://127.0.0.1:8001/datasets",
+  nginxRemoteImageIp:"http://127.0.0.1:8001/remoteImage",
   modelsName: [
     "目标检测",
     "语义分割",
@@ -12,7 +13,8 @@ export default {
     "多标签文本分类",
     "情感分析",
   ],
-  IoTs: ["可见光传感器", "红外传感器", "激光雷达传感器", "其他传感器"],
+  onlineAnnNames:['OnlineAnnotationObjectDetection','OnlineDev','OnlineDev','OnlineDev','OnlineDev','OnlineDev'],//与modelsName一一对应
+  IoTs: ["可见光传感器", "红外传感器", "激光雷达传感器", "声光气液传感器"],
   socials: ["社交媒体", "公开网站"],
   iotColors: ["#3CB371", "#4169E1", "#FF4500", "#00BFFF"],
   socialsColors: ["#008B8B", "#AB82FF"],
@@ -101,21 +103,21 @@ export default {
   socialsModel: [
     [
       {
-        backPath: "/images/test.png",
+        backPath: "/images/social1.jpg",
         title: "文本分类-单分类",
         smallTile:
           "定制分类标签实现文本内容的自动分类，每个文本属于一种标签类型",
         index: 0,
       },
       {
-        backPath: "/images//test.png",
+        backPath: "/images//social2.jpg",
         title: "文本分类-多分类",
         smallTile:
           "定制分类标签实现文本内容的自动分类，每个文本可以属于多个标签类型",
         index: 1,
       },
       {
-        backPath: "/images//test.png",
+        backPath: "/images//social3.jpg",
         title: "情感分析",
         smallTile:
           "又称倾向性分析或观点挖掘，可自动挖掘文本中的立场、观点、看法、情绪和喜恶等。",
@@ -124,21 +126,21 @@ export default {
     ],
     [
       {
-        backPath: "/images/test.png",
+        backPath: "/images/social1.jpg",
         title: "文本分类-单分类",
         smallTile:
           "定制分类标签实现文本内容的自动分类，每个文本属于一种标签类型",
         index: 0,
       },
       {
-        backPath: "/images//test.png",
+        backPath: "/images//social2.jpg",
         title: "文本分类-多分类",
         smallTile:
           "定制分类标签实现文本内容的自动分类，每个文本可以属于多个标签类型",
         index: 1,
       },
       {
-        backPath: "/images//test.png",
+        backPath: "/images//social3.jpg",
         title: "情感分析",
         smallTile:
           "又称倾向性分析或观点挖掘，可自动挖掘文本中的立场、观点、看法、情绪和喜恶等。",

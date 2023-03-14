@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import NavigationAbove from "../../components/User/NavigationAbove.vue";
 import NavigationBelow from "../../components/User/NavigationBelow.vue";
 import ModelsInDialog from "../User/ModelsInDialog.vue";
@@ -45,6 +46,9 @@ export default {
         this.makeDialogShow();
       });
 
+      if('uid' in this.$route.params){
+        this.changeUid(this.$route.params['uid']);
+      }
   },
 
   methods: {
@@ -53,7 +57,8 @@ export default {
         this.currentMode = modes[0];
       }
       this.dialogTableVisible = true;
-    }
+    },
+    ...mapMutations(['changeUid']),
   },
 };
 </script>

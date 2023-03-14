@@ -21,9 +21,15 @@
           class="el-dropdown-link touX"
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="center">个人中心</el-dropdown-item>
-          <el-dropdown-item command="myDataset" @click.native="myDataset">我的数据集</el-dropdown-item>
-          <el-dropdown-item command="myModel"  @click.native="myModel">我的模型</el-dropdown-item>
+          <el-dropdown-item command="center" @click.native="goCenter"
+            >个人中心</el-dropdown-item
+          >
+          <el-dropdown-item command="myDataset" @click.native="myDataset"
+            >我的数据集</el-dropdown-item
+          >
+          <el-dropdown-item command="myModel" @click.native="myModel"
+            >我的模型</el-dropdown-item
+          >
           <el-dropdown-item
             :divided="true"
             icon="el-icon-switch-button"
@@ -50,29 +56,59 @@
       <div
         size="default"
         type="primary"
-        v-for="(func, index) in funcs"
+        v-for="(func, index) in fun"
         :key="index"
       >
-        <span class="el-dropdown-link funcStyle" @click="doFunc(index)">
-          {{ func }}
+        <span
+          class="el-dropdown-link funcStyle"
+          @click="doFunc(index)"
+          v-if="func.children.length == 0"
+        >
+          {{ func.label }}
         </span>
+        <el-dropdown placement="bottom" v-else @command="dropdownClick">
+          <span class="el-dropdown-link funcStyle" @click="doFunc(index)">
+            {{ func.label }}
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="(child, index) in func.children"
+              :key="index"
+              :command="index"
+              >{{ child }}</el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import config from '../../assets/configs/config';
-let {ip} = config;
-import {mapMutations} from 'vuex';
+import axios from "axios";
+import config from "../../assets/configs/config";
+let { ip } = config;
+import { mapMutations } from "vuex";
 export default {
   name: "EasyConfigurationHeader",
 
   data() {
     return {
       hasLogIn: false,
-      funcs: ["首页", "产品介绍", "使用文档", "应用案例"],
+      fun: [
+        {
+          label: "首页",
+          children: [],
+        },
+        {
+          label: "产品介绍",
+          children: ["物联感知", "互联感知"],
+        },
+        {
+          label: "使用文档",
+          children: [],
+        },
+      ],
     };
   },
 
@@ -80,12 +116,12 @@ export default {
     this.verifyTokens();
   },
   methods: {
-    ...mapMutations(['updateUserId']),
+    ...mapMutations(["updateUserId"]),
     async verifyTokens() {
       //查看是否通过首页免密登录
       if (this.$route.params && "type" in this.$route.params) {
         //更新数据
-        this.updateUserId(this.$route.params.uid)
+        this.updateUserId(this.$route.params.uid);
         this.hasLogIn = true;
         return;
       }
@@ -95,7 +131,7 @@ export default {
       });
       let info = res.data.data;
       if (info.type == "user") {
-        this.updateUserId(info.uid)
+        this.updateUserId(info.uid);
         this.hasLogIn = true;
       }
     },
@@ -123,12 +159,33 @@ export default {
           break;
       }
     },
-    myDataset(){
-      this.$bus.$emit('dialogShow','dataset');
+    myDataset() {
+      this.$bus.$emit("dialogShow", "dataset");
     },
-    myModel(){
-      this.$bus.$emit('dialogShow','model');
-    }
+    myModel() {
+      this.$bus.$emit("dialogShow", "model");
+    },
+    goCenter() {
+      this.$router.push({
+        name: "PersonCenter",
+      });
+    },
+    dropdownClick(command) {
+      switch (command) {
+        case 0:
+          this.$router.push({
+            name: "IoTPerception",
+          });
+          break;
+        case 1:
+          this.$router.push({
+            name: "SocialPerception",
+          });
+          break;
+        default:
+          break;
+      }
+    },
   },
 };
 </script>
@@ -196,7 +253,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 25vw;
+  width: 18vw;
 }
 
 .funcStyle {

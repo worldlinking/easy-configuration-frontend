@@ -10,7 +10,7 @@
         <div class="gzSData">可见光传感器</div>
         <div class="gzSData">红外相机</div>
         <div class="gzSData">激光雷达</div>
-        <div class="gzSData">其他传感器</div>
+        <div class="gzSData">声光气液传感器</div>
       </div>
       <div class="gzLine"></div>
       <div class="gzDesc">

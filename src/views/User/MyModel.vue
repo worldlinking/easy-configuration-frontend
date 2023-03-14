@@ -494,6 +494,7 @@ export default {
   },
   watch: {
     chartsData(newValue, oldValue) {
+
       for (var id in newValue) {
         var dom = document.getElementById(`chart_${id}`);
 

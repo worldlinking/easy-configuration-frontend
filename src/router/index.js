@@ -29,7 +29,11 @@ import UserModelManage from "../views/Admin/UserModelManage.vue";
 import UserInfoManage from "../views/Admin/UserInfoManage.vue";
 import UserDatasetManage from "../views/Admin/UserDatasetManage.vue";
 import OnlineAnnotationObjectDetection from "../views/User/OnlineAnnotationObjectDetection.vue";
-import IOTDatasetDetail from '../views/User/IOTDatasetDetail.vue'
+import IOTDatasetDetail from "../views/User/IOTDatasetDetail.vue";
+import PersonCenter from "../views/User/PersonCenter.vue";
+import OnlineDev from "../views/User/OnlineDev.vue";
+import OnlineEarthImage from "../views/User/OnlineEarthImage.vue";
+import SensorPredict from "../views/User/SensorPredict.vue";
 
 // import MyDataset from '../views/User/MyDataset.vue'
 import ModelIntro from "../views/User/ModelIntro";
@@ -64,6 +68,8 @@ const routes = [
     component: User,
     children: [
       { path: "navigation", component: Navigation, name: "Navigation" },
+      { path: "PersonCenter", component: PersonCenter, name: "PersonCenter" },
+
       {
         path: "IoTPerception",
         component: IoTPerception,
@@ -152,13 +158,28 @@ const routes = [
           {
             path: "OnlineAnnotationObjectDetection",
             component: OnlineAnnotationObjectDetection,
-            name: "OnlineAnnotationObjectDetection"
+            name: "OnlineAnnotationObjectDetection",
           },
           {
-            path:"IOTDatasetDetail",
-            component:IOTDatasetDetail,
-            name:"IOTDatasetDetail"
-          }
+            path: "IOTDatasetDetail",
+            component: IOTDatasetDetail,
+            name: "IOTDatasetDetail",
+          },
+          {
+            path: "OnlineDev",
+            component: OnlineDev,
+            name: "OnlineDev",
+          },
+          {
+            path: "OnlineEarthImage",
+            component: OnlineEarthImage,
+            name: "OnlineEarthImage",
+          },
+          {
+            path: "SensorPredict",
+            component: SensorPredict,
+            name: "SensorPredict",
+          },
         ],
       },
     ],

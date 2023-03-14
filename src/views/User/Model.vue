@@ -42,8 +42,6 @@ export default {
     paramsAnalysis() {
       this.modelIndex = this.$route.params.modelIndex;
       this.type = this.$route.params.type;//0：物联感知，1：社会感知
-      // this.modelIndex = 2;
-      // this.type = 0;
       if(this.type == 0){
         this.modelName = this.IoTModelName[this.modelIndex];
       }else{

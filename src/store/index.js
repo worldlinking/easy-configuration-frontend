@@ -4,13 +4,15 @@ import Vuex from "vuex";
 import axios from "axios";
 import config from "../assets/configs/config";
 import de from "element-ui/src/locale/lang/de";
-let { ip, nginxIp, modelsName } = config;
+let { ip, nginxIp, modelsName,onlineAnnNames } = config;
+
+
 
 Vue.use(Vuex);
 
 const options = {
   state: {
-    user_id: 1,
+    user_id: 2,
     modelIndex: 0,
     type: 0,
     modelName: "目标检测",
@@ -47,14 +49,14 @@ const options = {
     modelStatus: ["未开始训练", "训练中", "训练完成", "训练终止", "训练出错"],
     allUsers: [],
     allUserDatasets: [],
-    annPageName:"OnlineAnnotationObjectDetection"
+    annPageName:"",
+    // OnlineAnnotationObjectDetection
   },
   actions: {},
   mutations: {
     async getAllModelName(state) {
       let res = await axios.get(`${ip}/getAllModelName`);
       state.allModelName = res.data.data;
-      // console.log(state.allModelName);
     },
     initModelParams(state, { modelIndex, type, modelName }) {
       state.modelIndex = modelIndex;
@@ -64,6 +66,7 @@ const options = {
       for (var i = 0; i < modelsName.length; i++) {
         if (state.modelName == modelsName[i]) {
           state.modelType = i;
+          state.annPageName = onlineAnnNames[i];
         }
       }
     },
@@ -570,6 +573,8 @@ const options = {
       state.currentWeightName = [];
     },
     async getLossData(state) {
+      console.log(`${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`);
+      
       let res = await axios.get(
         `${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`
       );
@@ -745,6 +750,9 @@ const options = {
           type: "error",
         });
       }
+    },
+    changeUid(state,uid){
+      state.user_id = uid;
     },
   },
 };

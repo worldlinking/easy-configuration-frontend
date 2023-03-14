@@ -41,6 +41,8 @@
         </template>
         <el-menu-item index="/user/Model/UseMyModel">使用我的模型</el-menu-item>
         <el-menu-item index="/user/Model/UsePublicModel">使用官方模型</el-menu-item>
+        <el-menu-item index="/user/Model/SensorPredict" v-if="type==0">时序数据预测</el-menu-item>
+        <el-menu-item index="/user/Model/OnlineEarthImage" v-if="type==0">遥感影像预测</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -57,7 +59,9 @@ export default {
     };
   },
 
-  mounted() {},
+  mounted() {
+    console.log(this.modelIndex,this.type);
+  },
 
   methods: {
     handleClose(key, keyPath) {
@@ -65,7 +69,7 @@ export default {
     },
   },
   computed:{
-    ...mapState(['annPageName']),
+    ...mapState(['annPageName','modelIndex','type']),
   }
 };
 </script>

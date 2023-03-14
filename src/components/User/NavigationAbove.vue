@@ -41,10 +41,6 @@
         </div>
         <div class="navChooses">
           <div class="navChoose">
-            <i class="el-icon-video-camera-solid"></i>
-            产品介绍
-          </div>
-          <div class="navChoose">
             <i class="el-icon-s-order"></i>
             使用文档
           </div>
