@@ -12,8 +12,9 @@ export default {
     "单标签文本分类",
     "多标签文本分类",
     "情感分析",
+      "主题挖掘"
   ],
-  onlineAnnNames:['OnlineAnnotationObjectDetection','OnlineDev','OnlineDev','OnlineDev','OnlineDev','OnlineDev'],//与modelsName一一对应
+  onlineAnnNames:['OnlineAnnotationObjectDetection','OnlineDev','OnlineDev','OnlineDev','OnlineDev','OnlineAnnotationSentimentCategory','OnlineAnnotationTopicModel'],//与modelsName一一对应
   IoTs: ["可见光传感器", "红外传感器", "激光雷达传感器", "声光气液传感器"],
   socials: ["社交媒体", "公开网站"],
   iotColors: ["#3CB371", "#4169E1", "#FF4500", "#00BFFF"],
@@ -123,6 +124,13 @@ export default {
           "又称倾向性分析或观点挖掘，可自动挖掘文本中的立场、观点、看法、情绪和喜恶等。",
         index: 2,
       },
+      {
+        backPath: "/images//topic.png",
+        title: "主题挖掘",
+        smallTile:
+            "可以用来识别大规模文档集（document collection）或语料库（corpus）中潜藏的主题信息。",
+        index: 3,
+      }
     ],
     [
       {
@@ -146,6 +154,13 @@ export default {
           "又称倾向性分析或观点挖掘，可自动挖掘文本中的立场、观点、看法、情绪和喜恶等。",
         index: 2,
       },
+      {
+        backPath: "/images//test.png",
+        title: "主题挖掘",
+        smallTile:
+            "可以用来识别大规模文档集（document collection）或语料库（corpus）中潜藏的主题信息。",
+        index: 3,
+      }
     ],
   ],
 };

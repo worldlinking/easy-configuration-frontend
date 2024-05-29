@@ -136,7 +136,7 @@
 <script>
 import axios from "axios";
 import config from "../assets/configs/config";
-
+import {mapMutations} from "vuex";
 let { ip } = config;
 
 export default {
@@ -245,6 +245,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['updateUserid']),
+
     async login() {
       //登录
       let res = await axios.post(`${ip}/login`, {
@@ -261,6 +263,9 @@ export default {
           message: "登录成功！",
           type: "success",
         });
+
+        this.updateUserid(res.data.data.user_id);
+
         if (res.data.data.type == "user") {
           this.$router.replace({
             name: "Navigation",

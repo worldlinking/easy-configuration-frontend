@@ -2,7 +2,7 @@
   <div class="SpiderItemList">
     <el-row class="itemTab">
       <el-col :span="6">
-        <span >爬取条目：{{this.itemList.length}}条</span>
+        <span >爬取条目：{{pagedData.totalNum}}条</span>
       </el-col>
       <el-col :span="6" :offset="12">
         <el-button style="float: right;" type="primary" icon="el-icon-upload"  @click="exportEvent">导出文本内容</el-button>
@@ -11,11 +11,13 @@
     </el-row>
     <el-table
         v-loading="loadingShow"
+        class="dataTable"
         element-loading-text="数据正在加载中..."
         :data="itemList"
         height='720'
         border
-        style="width: 100%">
+        style="width: 100%"
+        fit="false">
       <el-table-column
           v-for="(item,index) in header"
           :key="index"
@@ -32,8 +34,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+        :page-sizes="[5,10,20]"
+        :current-page="pagedData.nowPage"
+        :page-size="pagedData.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pagedData.totalNum"
+        style="margin: 1rem 18rem"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+    />
     <el-dialog
-        title="三维展示"
+        title="气象展示"
         :visible.sync="chartsVisible">
         <span slot="title" class="dialog-footer">
           <strong style="margin-right : auto;font-size: 22px">24h气象展示</strong>
@@ -59,15 +71,16 @@ export default {
       header:[],
       loadingShow:true,
       chartsVisible:false,
-      taskName:''
+      taskName:'',
+      pagedData: {
+        totalNum: 0,
+        nowPage: 1,
+        pageSize: 10
+      },
     }
   },
-  async mounted() {
-    let res = await axios.get(`${ip}/spider/itemList/?id=${this.$route.params.id}`);
-    this.itemList=res.data.data
-    this.taskName=this.itemList[0].task
-    this.header=res.data.header
-    this.loadingShow=false
+  mounted() {
+    this.checkDatas();
   },
   computed:{
     option(){
@@ -174,6 +187,24 @@ export default {
     }
   },
   methods: {
+    async checkDatas() {
+      const page = this.pagedData.nowPage
+      const size = this.pagedData.pageSize
+      const res = await axios.get(`${ip}/spider/itemList/?id=${this.$route.params.id}&page=${page}&size=${size}`)
+      this.itemList = res.data.data
+      this.taskName = this.itemList[0].task
+      this.header = res.data.header
+      this.pagedData.totalNum = res.data.total
+      this.loadingShow = false
+    },
+    handleSizeChange(nowSize) {
+      this.pagedData.pageSize = nowSize
+      this.checkDatas()
+    },
+    handleCurrentChange(nowPage) {
+      this.pagedData.nowPage = nowPage
+      this.checkDatas()
+    },
     initCharts(){
       const myChart = echarts.init(document.getElementById('weatherChart'))
       myChart.setOption(this.option);
@@ -233,5 +264,12 @@ export default {
 #weatherChart{
   width: 100%;
   height: 25rem;
+}
+
+.dataTable .cell {
+  padding: 0 !important;
+  height: 10px;
+  line-height: 10px !important;
+  text-align: center;
 }
 </style>

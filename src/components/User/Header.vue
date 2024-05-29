@@ -97,17 +97,17 @@ export default {
       hasLogIn: false,
       fun: [
         {
-          label: "首页",
+          label: "基于社交媒体数据的社会感知应用可视化系统",
           children: [],
         },
-        {
-          label: "产品介绍",
-          children: ["物联感知", "互联感知"],
-        },
-        {
-          label: "使用文档",
-          children: [],
-        },
+        // {
+        //   label: "产品介绍",
+        //   children: ["物联感知", "互联感知"],
+        // },
+        // {
+        //   label: "使用文档",
+        //   children: [],
+        // },
       ],
     };
   },
@@ -253,12 +253,13 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 18vw;
+  width: 20vw;
 }
 
 .funcStyle {
   color: whitesmoke;
   font-weight: 500;
+  margin-left: 10px;
 }
 .funcStyle:hover {
   cursor: pointer;

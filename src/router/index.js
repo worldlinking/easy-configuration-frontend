@@ -24,7 +24,6 @@ import ManageModel from "../views/Admin/ManageModel.vue";
 import UploadPublicDataset from "../views/Admin/UploadPublicDataset.vue";
 import CreatePublicDataset from "../views/Admin/CreatePublicDataset.vue";
 import PublicModel from "../views/User/PublicModel.vue";
-import MyDataset from "../views/User/MyDataset.vue";
 import UserModelManage from "../views/Admin/UserModelManage.vue";
 import UserInfoManage from "../views/Admin/UserInfoManage.vue";
 import UserDatasetManage from "../views/Admin/UserDatasetManage.vue";
@@ -32,13 +31,18 @@ import OnlineAnnotationObjectDetection from "../views/User/OnlineAnnotationObjec
 import IOTDatasetDetail from "../views/User/IOTDatasetDetail.vue";
 import PersonCenter from "../views/User/PersonCenter.vue";
 import OnlineDev from "../views/User/OnlineDev.vue";
-import OnlineEarthImage from "../views/User/OnlineEarthImage.vue";
+// import OnlineEarthImage from "../views/User/OnlineEarthImage.vue";
 import SensorPredict from "../views/User/SensorPredict.vue";
-
+import OnlineAnnotationTopicModel from "../views/User/OnlineAnnotationTopicModel.vue";
+import TourismPerception from "../views/User/TourismPerception";
 // import MyDataset from '../views/User/MyDataset.vue'
 import ModelIntro from "../views/User/ModelIntro";
 import axios from "axios";
 import config from "../assets/configs/config";
+import MyDataset from "../views/User/MyDataset";
+import OnlineTopicModel from "../views/User/OnlineAnnotationTopicModel";
+import OnlineAnnotationSentimentCategory from "../views/User/OnlineAnnotationSentimentCategory";
+import DisasterPredict from "../views/User/DisasterPredict";
 let { ip } = config;
 
 const originalReplace = VueRouter.prototype.replace;
@@ -171,14 +175,34 @@ const routes = [
             name: "OnlineDev",
           },
           {
-            path: "OnlineEarthImage",
-            component: OnlineEarthImage,
-            name: "OnlineEarthImage",
+            path: "OnlineAnnotationTopicModel",
+            component: OnlineAnnotationTopicModel,
+            name: "OnlineAnnotationTopicModel",
           },
+          {
+            path: "OnlineAnnotationSentimentCategory",
+            component: OnlineAnnotationSentimentCategory,
+            name: "OnlineAnnotationSentimentCategory",
+          },
+          // {
+          //   path: "OnlineEarthImage",
+          //   component: OnlineEarthImage,
+          //   name: "OnlineEarthImage",
+          // },
           {
             path: "SensorPredict",
             component: SensorPredict,
             name: "SensorPredict",
+          },
+          {
+            path: "DisasterPredict",
+            component: DisasterPredict,
+            name: "DisasterPredict",
+          },
+          {
+            path: "TourismPerception",
+            component: TourismPerception,
+            name: "TourismPerception",
           },
         ],
       },

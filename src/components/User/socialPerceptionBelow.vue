@@ -48,7 +48,7 @@ export default {
 
 <style scoped>
 .modelsCon {
-  width: 60vw;
+  width: 80vw;
   height: 42vh;
   display: flex;
   justify-content: space-around;

@@ -23,6 +23,8 @@ const options = {
       "https://img.tukuppt.com/png_preview/00/04/81/SYZxWQlAr9.jpg!/fw/780",
     predictZipSrc: "暂无结果",
     txtResult: "暂无结果",
+    predictResult:[],
+    predictHeader:[],
     predictStatus: 0,
     datasets: [],
     standDataset: [],
@@ -54,6 +56,10 @@ const options = {
   },
   actions: {},
   mutations: {
+    updateUserid(state,id){
+      state.user_id=id
+      console.log(state.user_id)
+    },
     async getAllModelName(state) {
       let res = await axios.get(`${ip}/getAllModelName`);
       state.allModelName = res.data.data;
@@ -89,9 +95,9 @@ const options = {
         });
         return;
       }
-
       loading.close();
       state.spiderJobs = res.data.data;
+      console.log(state.spiderJobs)
     },
     async getStandModel(state) {
       //根据模型种类获取所有的标准模型
@@ -121,9 +127,9 @@ const options = {
     },
     async predict(
       state,
-      { current_file, weight_id, standModel_id, cp, predictType, txtContent }
+      { current_file, weight_id, standModel_id, cp, predictType, task_id,txtContent }
     ) {
-      if (!current_file && !txtContent) {
+      if (!current_file && !txtContent && predictType!=='spider') {
         cp.$message({
           type: "error",
           message: "请先上传文件！",
@@ -219,6 +225,13 @@ const options = {
           state.predictStatus = 3;
         }
       } else if (predictType == "txt") {
+        if (!txtContent) {
+          cp.$message({
+            type: "error",
+            message: "请先输入预测样本！",
+          });
+          return;
+        }
         let postUrl = `${ip}/useStandModelWeightText`;
         const formData = new FormData();
         formData.append("weight_id", parseInt(weight_id));
@@ -233,6 +246,35 @@ const options = {
             message: "预测成功!",
           });
           state.txtResult = res.data.data;
+          state.predictStatus = 2;
+        } else {
+          state.predictStatus = 3;
+        }
+      }else if (predictType == "spider") {
+        if (!task_id) {
+          cp.$message({
+            type: "error",
+            message: "请先选择爬虫数据！",
+          });
+          return;
+        }
+        let postUrl = `${ip}/spider/PredictSpiderText/`;
+        const formData = new FormData();
+        formData.append("weight_id", parseInt(weight_id));
+        formData.append("standModel_id", parseInt(standModel_id));
+        formData.append("task_id", task_id);
+        formData.append("user_id", state.user_id);
+
+        let res = await axios.post(postUrl, formData);
+
+        if (res.data.code == 200) {
+          cp.$message({
+            type: "success",
+            message: "预测成功!",
+          });
+          state.predictResult=res.data.preResult
+          state.predictHeader=res.data.header
+          state.txtResult = nginxIp + "\\" + res.data.data;
           state.predictStatus = 2;
         } else {
           state.predictStatus = 3;
@@ -310,7 +352,6 @@ const options = {
       const formData = new FormData();
       formData.append("dataset_id", dataset_id);
       formData.append("user_id", state.user_id);
-      console.log(formData)
 
       let res = await axios.post(`${ip}/textDuplicate`, formData);
       if (res.data.code == 200) {
@@ -574,7 +615,7 @@ const options = {
     },
     async getLossData(state) {
       console.log(`${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`);
-      
+
       let res = await axios.get(
         `${ip}/getLossData?user_id=${state.user_id}&model_type=${state.modelType}`
       );

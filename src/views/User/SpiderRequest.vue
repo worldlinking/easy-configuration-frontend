@@ -7,14 +7,14 @@
       <el-form-item label="目标网站"  prop="siteName">
         <el-select v-model="form.siteName" placeholder="请选择爬取目标网站">
           <el-option label="微博" value="微博"></el-option>
-          <el-option label="推特" value="twitter"></el-option>
+          <el-option label="抖音" value="douyin"></el-option>
           <el-option label="中央气象网" value="weather"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="检索关键词"  prop="keyword" v-show="form.siteName!=='weather'">
         <el-input v-model="form.keyword"></el-input>
       </el-form-item>
-      <el-form-item label="搜索时间"  prop="searchTime" v-show="form.siteName!=='weather'">
+      <el-form-item label="搜索时间"  prop="searchTime" v-show="form.siteName==='微博'">
         <el-date-picker
             v-model="form.Date"
             type="daterange"
@@ -24,13 +24,24 @@
             end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="选择地区"  prop="searchRegion">
+      <el-form-item label="选择地区"  prop="searchRegion" v-show="form.siteName==='weather'">
         <el-cascader
             size="large"
             :options="options"
             v-model="form.region"
             @change="handleChange">
         </el-cascader>
+      </el-form-item>
+      <el-form-item label="发布时间"  prop="createdTime" v-show="form.siteName==='douyin'">
+        <el-radio-group v-model="form.createdTime">
+          <el-radio-button label="不限" value="0"></el-radio-button>
+          <el-radio-button label="一天内" value="1"></el-radio-button>
+          <el-radio-button label="一周内" value="7"></el-radio-button>
+          <el-radio-button label="半年内" value="182"></el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="爬取页数"  prop="pageNum" v-show="form.siteName==='douyin'">
+        <el-input-number v-model="form.pageNum" :min="1"></el-input-number>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitSpiderJob">立即创建</el-button>
@@ -73,6 +84,8 @@ export default {
         siteName: '',
         Date:'',
         region:null,
+        createdTime:'',
+        pageNum:1,
       },
       rules:{
         taskName: [{ validator: validatePass, trigger: "change" }],
@@ -112,15 +125,19 @@ export default {
     },
     async createSpider() {
       let postUrl = `${ip}/spider/spiderRequest/`;
-      const formData = new FormData();
+      let formData = new FormData();
       formData.append("taskName", this.form.taskName);
       formData.append("siteName", this.form.siteName);
-      // formData.append("keyword", this.form.keyword);
-      // formData.append("startdate", this.form.Date[0]);
-      // formData.append("enddate", this.form.Date[1]);
+      formData.append("keyword", this.form.keyword);
+      formData.append("startdate", this.form.Date[0]);
+      formData.append("enddate", this.form.Date[1]);
       formData.append("user_id", this.user_id);
       formData.append("province", this.province);
       formData.append("city", this.city);
+      formData.append("createdTime", this.form.createdTime);
+      formData.append("page", this.form.pageNum);
+      console.log(this.form.taskName,formData.get('user_id'))
+
       let res = await axios.post(postUrl, formData);
 
       if (res.data.code === 200) {

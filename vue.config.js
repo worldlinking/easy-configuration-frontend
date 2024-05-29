@@ -1,12 +1,13 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const webpack = require('webpack')
 const path = require('path')
- 
+
 let cesiumSource = './node_modules/cesium/Source'
 let cesiumWorkers = '../Build/Cesium/Workers'
 
- 
+
 module.exports = {
+  transpileDependencies:['/@cesium'],
   // 基本路径  3.6之前的版本时 baseUrl
   publicPath: "./",
   // 输出文件目录
